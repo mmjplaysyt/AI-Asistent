@@ -11,913 +11,381 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 <style>
-  :root {
-    --bg-primary:#0a0a0b;--bg-secondary:#111113;--bg-tertiary:#1a1a1e;--bg-card:#16161a;
-    --border:#2a2a30;--border-hover:#3a3a42;
-    --text-primary:#ececf1;--text-secondary:#8e8e96;--text-muted:#5c5c66;
-    --accent:#e8a832;--accent-dim:rgba(232,168,50,.12);--accent-glow:rgba(232,168,50,.25);
-    --user-bubble:#1e3a2f;--user-border:#2a5c44;
-    --danger:#e84855;--success:#3dd68c;
-    --teach:#a78bfa;--teach-dim:rgba(167,139,250,.1);--teach-border:rgba(167,139,250,.25);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Space Grotesk',sans-serif;background:var(--bg-primary);color:var(--text-primary);height:100vh;overflow:hidden;}
-  ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+:root{
+  --bg:#0d0d0f;--bg2:#141416;--bg3:#1c1c20;--bg4:#242428;
+  --border:#2a2a30;--border2:#35353c;
+  --text:#e4e4e9;--text2:#9494a0;--text3:#5e5e6a;
+  --accent:#d4922a;--accent2:#e8a832;--accentDim:rgba(232,168,50,.1);
+  --teach:#a78bfa;--teachDim:rgba(167,139,250,.08);--teachBorder:rgba(167,139,250,.2);
+  --err:#e84855;--ok:#3dd68c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:9px}
 
-  .bg-ambient{position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:radial-gradient(ellipse 600px 400px at 15% 20%,rgba(232,168,50,.04) 0%,transparent 70%),
-    radial-gradient(ellipse 500px 500px at 85% 80%,rgba(61,214,140,.03) 0%,transparent 70%),
-    radial-gradient(ellipse 400px 300px at 70% 10%,rgba(167,139,250,.025) 0%,transparent 70%);}
+/* Top bar */
+.topbar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;background:var(--bg);position:relative;z-index:20;flex-shrink:0}
+.topbar-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#0a0a0b;flex-shrink:0}
+.topbar-name{font-size:15px;font-weight:700;color:var(--text)}
+.topbar-spacer{flex:1}
+.topbar-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s}
+.topbar-btn:hover{background:var(--bg3);color:var(--text2);border-color:var(--border2)}
+.topbar-model{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:11.5px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%235e5e6a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;padding-right:22px}
+.topbar-model option{background:var(--bg3);color:var(--text)}
 
-  .sidebar{width:290px;background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .3s ease;z-index:30;}
-  .sidebar.collapsed{transform:translateX(-100%);opacity:0;position:absolute;height:100%;}
-  .sidebar-header{padding:20px;border-bottom:1px solid var(--border);}
-  .brand{display:flex;align-items:center;gap:12px;}
-  .brand-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),#d4922a);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0a0a0b;box-shadow:0 4px 20px var(--accent-glow);position:relative;overflow:hidden;}
-  .brand-icon::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.2) 50%,transparent 60%);animation:shimmer 3s infinite;}
-  @keyframes shimmer{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
-  .brand-text h1{font-size:17px;font-weight:700;letter-spacing:-.3px;}
-  .brand-text span{font-size:11px;color:var(--text-muted);font-weight:400;letter-spacing:.5px;text-transform:uppercase;}
+/* Chat area */
+.chat-area{flex:1;overflow-y:auto;padding-bottom:10px}
+.chat-inner{max-width:780px;margin:0 auto;padding:0 24px}
 
-  .new-chat-btn{margin:16px 20px 8px;padding:11px 16px;background:var(--accent-dim);border:1px solid rgba(232,168,50,.2);border-radius:10px;color:var(--accent);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s ease;}
-  .new-chat-btn:hover{background:rgba(232,168,50,.18);border-color:rgba(232,168,50,.35);transform:translateY(-1px);}
+/* Message block - Copilot style */
+.msg-block{padding:18px 0}
+.msg-block+.msg-block{border-top:1px solid rgba(255,255,255,.03)}
+.msg-head{display:flex;align-items:center;margin-bottom:6px;gap:8px}
+.msg-name{font-size:13px;font-weight:600}
+.msg-name.user-n{color:var(--text2)}
+.msg-name.ai-n{color:var(--accent2)}
+.msg-time{font-size:11px;color:var(--text3)}
+.msg-taught{font-size:9px;padding:1px 6px;border-radius:8px;background:var(--teachDim);border:1px solid var(--teachBorder);color:var(--teach);font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.msg-body{font-size:14.5px;line-height:1.72;color:var(--text);padding-left:0}
+.msg-body p{margin-bottom:10px}.msg-body p:last-child{margin-bottom:0}
+.msg-body ul,.msg-body ol{margin:8px 0;padding-left:22px}.msg-body li{margin-bottom:3px}
+.msg-body strong{color:var(--accent2);font-weight:600}.msg-body em{color:var(--text2)}
+.msg-body a{color:var(--accent2);text-decoration:underline;text-underline-offset:3px}
+.msg-body blockquote{border-left:3px solid var(--accent);padding:8px 16px;margin:10px 0;background:var(--accentDim);border-radius:0 8px 8px 0;color:var(--text2)}
+.msg-body h1,.msg-body h2,.msg-body h3{font-weight:700;margin:14px 0 6px;color:var(--text)}
+.msg-body h1{font-size:19px}.msg-body h2{font-size:16px}.msg-body h3{font-size:14.5px}
+.msg-body hr{border:none;border-top:1px solid var(--border);margin:12px 0}
+.msg-body table{border-collapse:collapse;margin:10px 0;width:100%;font-size:13px}
+.msg-body th,.msg-body td{border:1px solid var(--border);padding:7px 11px;text-align:left}
+.msg-body th{background:var(--bg3);font-weight:600}.msg-body td{color:var(--text2)}
+.msg-body pre{position:relative;margin:10px 0;border-radius:9px;overflow:hidden;border:1px solid var(--border)}
+.msg-body pre code{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;display:block;padding:14px;overflow-x:auto;background:#0d1117!important}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:10.5px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.copy-cb{background:transparent;border:1px solid var(--border);color:var(--text3);font-size:10px;padding:2px 7px;border-radius:4px;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all .12s}
+.copy-cb:hover{background:var(--accentDim);color:var(--accent2);border-color:rgba(232,168,50,.25)}
+.msg-body code:not(pre code){font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:var(--accent2)}
 
-  .sidebar-tabs{display:flex;padding:8px 20px 0;gap:4px;}
-  .sidebar-tab{flex:1;padding:8px 0;text-align:center;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s ease;border-radius:6px 6px 0 0;}
-  .sidebar-tab:hover{color:var(--text-secondary);background:var(--bg-tertiary);}
-  .sidebar-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-dim);}
+/* Actions */
+.msg-acts{display:flex;gap:2px;margin-top:5px;opacity:0;transition:opacity .12s}
+.msg-block:hover .msg-acts{opacity:1}
+.m-act{padding:4px 7px;border-radius:5px;border:none;background:transparent;color:var(--text3);font-family:'Space Grotesk',sans-serif;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .12s}
+.m-act:hover{background:var(--bg3);color:var(--text2)}
+.m-act.t-act:hover{background:var(--teachDim);color:var(--teach)}
+.m-act.t-act.on{color:var(--teach);opacity:1}
 
-  .chat-list,.knowledge-list{flex:1;overflow-y:auto;padding:8px 12px;}
-  .chat-item{padding:10px 14px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .15s ease;margin-bottom:2px;}
-  .chat-item:hover{background:var(--bg-tertiary);}
-  .chat-item.active{background:var(--accent-dim);}
-  .chat-item.active .chat-item-title{color:var(--accent);}
-  .chat-item-icon{color:var(--text-muted);font-size:13px;flex-shrink:0;}
-  .chat-item-title{font-size:13px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
-  .chat-item-delete{opacity:0;color:var(--text-muted);font-size:12px;cursor:pointer;padding:4px;border-radius:4px;transition:all .15s ease;}
-  .chat-item:hover .chat-item-delete{opacity:1;}
-  .chat-item-delete:hover{color:var(--danger);background:rgba(232,72,85,.1);}
+/* Error */
+.err-bub{background:rgba(232,72,85,.07);border:1px solid rgba(232,72,85,.18);border-radius:9px;padding:11px 14px;font-size:13px;color:#f08090;line-height:1.55}
+.err-bub i{margin-right:5px;color:var(--err)}.err-bub a{color:var(--accent2);text-decoration:underline;text-underline-offset:2px}
 
-  .knowledge-item{padding:12px 14px;border-radius:8px;border:1px solid var(--border);margin-bottom:6px;transition:all .15s ease;position:relative;}
-  .knowledge-item:hover{border-color:var(--teach-border);background:var(--teach-dim);}
-  .knowledge-item-q{font-size:12.5px;font-weight:600;color:var(--teach);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .knowledge-item-a{font-size:12px;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .knowledge-item-del{position:absolute;top:8px;right:8px;opacity:0;color:var(--text-muted);font-size:11px;cursor:pointer;padding:3px 5px;border-radius:4px;transition:all .15s ease;}
-  .knowledge-item:hover .knowledge-item-del{opacity:1;}
-  .knowledge-item-del:hover{color:var(--danger);background:rgba(232,72,85,.1);}
-  .knowledge-empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:13px;line-height:1.6;}
-  .knowledge-empty i{font-size:28px;display:block;margin-bottom:12px;color:var(--teach);opacity:.4;}
+/* Teach form */
+.tf{margin-top:6px;border:1px solid var(--teachBorder);border-radius:9px;background:var(--teachDim);overflow:hidden;animation:tfIn .18s ease}
+@keyframes tfIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+.tf-h{padding:8px 12px;background:rgba(167,139,250,.05);border-bottom:1px solid var(--teachBorder);font-size:11.5px;font-weight:600;color:var(--teach);display:flex;align-items:center;gap:6px}
+.tf-b{padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+.tf-b label{font-size:11px;font-weight:600;color:var(--text2)}
+.tf-b input,.tf-b textarea{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:12px;outline:none;transition:border-color .12s;resize:none}
+.tf-b input:focus,.tf-b textarea:focus{border-color:var(--teach)}
+.tf-b textarea{min-height:55px;line-height:1.5}
+.tf-f{padding:7px 12px;border-top:1px solid rgba(167,139,250,.08);display:flex;justify-content:flex-end;gap:5px}
+.tf-cancel{padding:5px 10px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--text3);font-family:'Space Grotesk',sans-serif;font-size:11px;cursor:pointer;transition:all .12s}
+.tf-cancel:hover{background:var(--bg3);color:var(--text2)}
+.tf-save{padding:5px 10px;border-radius:5px;border:none;background:var(--teach);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .12s}
+.tf-save:hover{background:#b89eff}
 
-  .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px;}
-  .model-selector{width:100%;padding:8px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:12px;cursor:pointer;outline:none;transition:border-color .2s ease;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235c5c66' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
-  .model-selector:focus{border-color:var(--accent);}
-  .model-selector option{background:var(--bg-tertiary);color:var(--text-primary);}
-  .settings-btn{width:100%;padding:8px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-family:'Space Grotesk',sans-serif;font-size:12px;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;gap:8px;}
-  .settings-btn:hover{border-color:var(--border-hover);color:var(--text-secondary);}
+/* Typing */
+.typing-d{display:flex;gap:4px;padding:4px 0}
+.typing-d span{width:5px;height:5px;background:var(--text3);border-radius:50%;animation:tb 1.2s infinite}
+.typing-d span:nth-child(2){animation-delay:.15s}.typing-d span:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
 
-  .main-area{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;}
-  .top-bar{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(10,10,11,.8);backdrop-filter:blur(12px);z-index:10;}
-  .toggle-sidebar{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:14px;transition:all .15s ease;}
-  .toggle-sidebar:hover{background:var(--bg-tertiary);color:var(--text-primary);}
-  .top-bar-title{font-size:14px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .top-bar-badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600;display:none;}
-  .top-bar-badge.visible{display:inline-flex;align-items:center;gap:5px;}
-  .top-bar-badge.teach{background:var(--teach-dim);border:1px solid var(--teach-border);color:var(--teach);}
-  .status-dot{width:7px;height:7px;border-radius:50%;transition:all .3s ease;}
-  .status-dot.ok{background:var(--success);box-shadow:0 0 8px rgba(61,214,140,.5);animation:pulse-dot 2s infinite;}
-  .status-dot.off{background:var(--danger);box-shadow:0 0 8px rgba(232,72,85,.5);}
-  @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.5}}
-  .status-text{font-size:12px;color:var(--text-muted);transition:color .3s ease;}
+/* Welcome */
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px 40px;text-align:center;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.welcome-logo{width:56px;height:56px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#0a0a0b;margin-bottom:18px;box-shadow:0 6px 28px rgba(232,168,50,.2)}
+.welcome h2{font-size:22px;font-weight:700;margin-bottom:5px}
+.welcome>p{font-size:13.5px;color:var(--text3);max-width:380px;line-height:1.6}
+.sug-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:28px;max-width:480px;width:100%}
+.sug-card{padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-align:left;cursor:pointer;transition:all .15s}
+.sug-card:hover{border-color:var(--border2);background:var(--bg3);transform:translateY(-1px)}
+.sug-card i{color:var(--accent2);font-size:12px;margin-bottom:5px;display:block}
+.sug-card span{font-size:12.5px;color:var(--text2);line-height:1.45}
 
-  .messages-container{flex:1;overflow-y:auto;padding:24px 0;}
-  .message-row{padding:6px 24px;display:flex;gap:14px;max-width:860px;margin:0 auto;width:100%;animation:msgIn .35s cubic-bezier(.16,1,.3,1) both;}
-  @keyframes msgIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-  .message-avatar{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px;}
-  .message-avatar.ai{background:linear-gradient(135deg,var(--accent),#d4922a);color:#0a0a0b;}
-  .message-avatar.user{background:var(--user-bubble);border:1px solid var(--user-border);color:var(--success);}
-  .message-content{flex:1;min-width:0;}
-  .message-sender{font-size:12.5px;font-weight:600;margin-bottom:5px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;}
-  .sender-taught-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:var(--teach-dim);border:1px solid var(--teach-border);color:var(--teach);font-weight:600;display:inline-flex;align-items:center;gap:4px;}
-  .message-body{font-size:14.5px;line-height:1.7;color:var(--text-primary);word-wrap:break-word;}
-  .message-body p{margin-bottom:10px;}.message-body p:last-child{margin-bottom:0;}
-  .message-body ul,.message-body ol{margin:8px 0;padding-left:22px;}.message-body li{margin-bottom:4px;}
-  .message-body strong{color:var(--accent);font-weight:600;}.message-body em{color:var(--text-secondary);}
-  .message-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
-  .message-body blockquote{border-left:3px solid var(--accent);padding:8px 16px;margin:10px 0;background:var(--accent-dim);border-radius:0 8px 8px 0;color:var(--text-secondary);}
-  .message-body h1,.message-body h2,.message-body h3{color:var(--text-primary);font-weight:700;margin:16px 0 8px;}
-  .message-body h1{font-size:20px;}.message-body h2{font-size:17px;}.message-body h3{font-size:15px;}
-  .message-body hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
-  .message-body table{border-collapse:collapse;margin:10px 0;width:100%;font-size:13px;}
-  .message-body th,.message-body td{border:1px solid var(--border);padding:8px 12px;text-align:left;}
-  .message-body th{background:var(--bg-tertiary);font-weight:600;}.message-body td{color:var(--text-secondary);}
-  .message-body pre{position:relative;margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
-  .message-body pre code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;display:block;padding:16px;overflow-x:auto;background:#0d1117!important;}
-  .code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg-tertiary);border-bottom:1px solid var(--border);font-size:11.5px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
-  .copy-code-btn{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:3px 10px;border-radius:5px;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all .15s ease;}
-  .copy-code-btn:hover{background:var(--accent-dim);color:var(--accent);border-color:rgba(232,168,50,.3);}
-  .message-body code:not(pre code){font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--bg-tertiary);border:1px solid var(--border);padding:2px 7px;border-radius:5px;color:var(--accent);}
-  .message-time{font-size:11px;color:var(--text-muted);margin-top:6px;}
+/* Input */
+.input-bar{padding:10px 24px 14px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.input-wrap{max-width:780px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:8px 10px 8px 16px;transition:border-color .12s,box-shadow .12s}
+.input-wrap:focus-within{border-color:var(--border2);box-shadow:0 0 0 2px rgba(255,255,255,.02)}
+.input-wrap textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:140px;padding:3px 0}
+.input-wrap textarea::placeholder{color:var(--text3)}
+.send-b{width:32px;height:32px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
+.send-b:hover{background:#f0b540;transform:scale(1.04)}
+.send-b:disabled{opacity:.25;cursor:not-allowed;transform:none}
+.send-b.ld{animation:sp 1s infinite}
+@keyframes sp{0%,100%{opacity:.45}50%{opacity:1}}
 
-  .message-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
-  .msg-action-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s ease;}
-  .msg-action-btn:hover{background:var(--bg-tertiary);color:var(--text-secondary);border-color:var(--border-hover);}
-  .msg-action-btn.teach-btn:hover{background:var(--teach-dim);color:var(--teach);border-color:var(--teach-border);}
-  .msg-action-btn.teach-btn.active{background:var(--teach-dim);color:var(--teach);border-color:var(--teach-border);}
+/* Sidebar panel */
+.side-panel{position:fixed;top:0;right:-320px;width:320px;height:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:40;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 30px rgba(0,0,0,.3)}
+.side-panel.open{right:0}
+.side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}
+.side-overlay.open{display:block}
+.sp-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sp-head h3{font-size:14px;font-weight:700}
+.sp-close{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .12s}
+.sp-close:hover{background:var(--bg3);color:var(--text2)}
+.sp-tabs{display:flex;padding:0 16px;border-bottom:1px solid var(--border)}
+.sp-tab{padding:10px 0;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-right:16px;transition:all .12s}
+.sp-tab:hover{color:var(--text2)}.sp-tab.on{color:var(--accent2);border-bottom-color:var(--accent2)}
+.sp-body{flex:1;overflow-y:auto;padding:10px 12px}
+.sp-item{padding:9px 11px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .1s;margin-bottom:1px;font-size:12.5px;color:var(--text2)}
+.sp-item:hover{background:var(--bg3)}.sp-item.on{background:var(--accentDim);color:var(--accent2)}
+.sp-item-del{margin-left:auto;opacity:0;color:var(--text3);font-size:10px;cursor:pointer;padding:2px;border-radius:3px;transition:all .1s}
+.sp-item:hover .sp-item-del{opacity:1}.sp-item-del:hover{color:var(--err);background:rgba(232,72,85,.08)}
+.k-item{padding:10px 11px;border-radius:7px;border:1px solid var(--border);margin-bottom:5px;position:relative;transition:all .1s}
+.k-item:hover{border-color:var(--teachBorder);background:var(--teachDim)}
+.k-q{font-size:11.5px;font-weight:600;color:var(--teach);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-a{font-size:11px;color:var(--text3);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.k-del{position:absolute;top:6px;right:6px;opacity:0;color:var(--text3);font-size:10px;cursor:pointer;padding:2px;border-radius:3px;transition:all .1s}
+.k-item:hover .k-del{opacity:1}.k-del:hover{color:var(--err);background:rgba(232,72,85,.08)}
+.k-empty{text-align:center;padding:30px 14px;color:var(--text3);font-size:12px;line-height:1.5}
+.k-empty i{font-size:22px;display:block;margin-bottom:8px;color:var(--teach);opacity:.35}
+.sp-foot{padding:12px 16px;border-top:1px solid var(--border)}
+.sp-new{width:100%;padding:8px 12px;border-radius:8px;border:1px dashed var(--border);background:transparent;color:var(--text3);font-family:'Space Grotesk',sans-serif;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .12s}
+.sp-new:hover{border-color:var(--accent);color:var(--accent2);background:var(--accentDim)}
 
-  .teach-form{margin-top:10px;border:1px solid var(--teach-border);border-radius:10px;background:var(--teach-dim);overflow:hidden;animation:teachIn .25s ease;}
-  @keyframes teachIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-  .teach-form-header{padding:10px 14px;background:rgba(167,139,250,.06);border-bottom:1px solid var(--teach-border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--teach);}
-  .teach-form-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
-  .teach-form-body label{font-size:12px;font-weight:600;color:var(--text-secondary);}
-  .teach-form-body input,.teach-form-body textarea{width:100%;padding:9px 13px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-family:'Space Grotesk',sans-serif;font-size:13px;outline:none;transition:border-color .2s ease;resize:none;}
-  .teach-form-body input:focus,.teach-form-body textarea:focus{border-color:var(--teach);}
-  .teach-form-body textarea{min-height:70px;line-height:1.5;}
-  .teach-form-footer{padding:10px 14px;border-top:1px solid rgba(167,139,250,.12);display:flex;justify-content:flex-end;gap:8px;}
-  .teach-cancel-btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'Space Grotesk',sans-serif;font-size:12px;cursor:pointer;transition:all .15s ease;}
-  .teach-cancel-btn:hover{background:var(--bg-tertiary);color:var(--text-secondary);}
-  .teach-save-btn{padding:7px 14px;border-radius:7px;border:none;background:var(--teach);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s ease;}
-  .teach-save-btn:hover{background:#b89eff;}
+/* Toast */
+.toast-c{position:fixed;top:14px;right:14px;z-index:100;display:flex;flex-direction:column;gap:5px}
+.toast{padding:9px 14px;border-radius:7px;font-size:12px;font-family:'Space Grotesk',sans-serif;max-width:340px;animation:ti .2s ease,to .2s ease 3.3s forwards;box-shadow:0 4px 20px rgba(0,0,0,.4);line-height:1.4}
+.toast.err{background:var(--err);color:white}.toast.ok{background:var(--ok);color:#0a0a0b}.toast.warn{background:#f59e0b;color:#0a0a0b}.toast.tt{background:var(--teach);color:#0a0a0b}
+@keyframes ti{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes to{to{opacity:0;transform:translateX(20px)}}
 
-  .error-bubble{background:rgba(232,72,85,.08);border:1px solid rgba(232,72,85,.2);border-radius:10px;padding:14px 18px;margin-top:6px;font-size:13.5px;color:#f08090;line-height:1.6;}
-  .error-bubble i{margin-right:6px;color:var(--danger);}
-  .error-bubble a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
-
-  .typing-indicator{display:flex;gap:5px;padding:8px 0;}
-  .typing-indicator span{width:7px;height:7px;background:var(--text-muted);border-radius:50%;animation:typeBounce 1.2s infinite;}
-  .typing-indicator span:nth-child(2){animation-delay:.15s;}.typing-indicator span:nth-child(3){animation-delay:.3s;}
-  @keyframes typeBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
-
-  /* Setup screen */
-  .setup-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
-  .setup-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--accent),#d4922a);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#0a0a0b;margin-bottom:28px;box-shadow:0 8px 40px var(--accent-glow);position:relative;}
-  .setup-icon::after{content:'';position:absolute;inset:-2px;border-radius:24px;background:linear-gradient(135deg,var(--accent),transparent,var(--accent));z-index:-1;opacity:.3;animation:rotateBorder 4s linear infinite;}
-  @keyframes rotateBorder{to{transform:rotate(360deg)}}
-  .setup-screen h2{font-size:26px;font-weight:700;margin-bottom:8px;letter-spacing:-.5px;}
-  .setup-screen>p{font-size:14.5px;color:var(--text-muted);max-width:460px;line-height:1.6;margin-bottom:28px;}
-
-  .setup-box{width:100%;max-width:460px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-align:left;}
-  .setup-box-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-  .setup-box-header i{color:var(--accent);font-size:16px;}
-  .setup-box-header span{font-size:14px;font-weight:600;}
-  .setup-box-body{padding:20px;}
-  .setup-box-body label{display:block;font-size:12.5px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
-  .setup-box-body .setup-hint{font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.5;}
-  .setup-box-body .setup-hint a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
-  .setup-input{width:100%;padding:11px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .2s ease,box-shadow .2s ease;}
-  .setup-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
-  .setup-input::placeholder{color:var(--text-muted);font-family:'Space Grotesk',sans-serif;}
-  .setup-status{margin-top:10px;font-size:12px;padding:8px 12px;border-radius:8px;display:none;line-height:1.5;}
-  .setup-status.valid{display:block;background:rgba(61,214,140,.08);border:1px solid rgba(61,214,140,.2);color:var(--success);}
-  .setup-status.invalid{display:block;background:rgba(232,72,85,.08);border:1px solid rgba(232,72,85,.2);color:#f08090;}
-  .setup-status.checking{display:block;background:var(--accent-dim);border:1px solid rgba(232,168,50,.2);color:var(--accent);}
-  .setup-box-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;}
-  .setup-submit{padding:10px 22px;border-radius:10px;border:none;background:var(--accent);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .2s ease;display:flex;align-items:center;gap:8px;}
-  .setup-submit:hover{background:#f0b540;transform:translateY(-1px);}
-  .setup-submit:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-
-  .setup-steps{display:flex;gap:16px;margin-top:24px;max-width:460px;width:100%;}
-  .setup-step{flex:1;text-align:center;padding:14px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;}
-  .setup-step .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent-dim);border:1px solid rgba(232,168,50,.3);color:var(--accent);font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px;}
-  .setup-step p{font-size:11.5px;color:var(--text-muted);line-height:1.4;}
-
-  /* Welcome */
-  .welcome-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
-  .welcome-icon{width:72px;height:72px;background:linear-gradient(135deg,var(--accent),#d4922a);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#0a0a0b;margin-bottom:24px;box-shadow:0 8px 40px var(--accent-glow);position:relative;}
-  .welcome-icon::after{content:'';position:absolute;inset:-2px;border-radius:22px;background:linear-gradient(135deg,var(--accent),transparent,var(--accent));z-index:-1;opacity:.3;animation:rotateBorder 4s linear infinite;}
-  .welcome-screen h2{font-size:26px;font-weight:700;margin-bottom:8px;letter-spacing:-.5px;}
-  .welcome-screen>p{font-size:14.5px;color:var(--text-muted);max-width:440px;line-height:1.6;}
-  .suggestions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:32px;max-width:520px;width:100%;}
-  .suggestion-card{padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-align:left;cursor:pointer;transition:all .2s ease;}
-  .suggestion-card:hover{border-color:var(--accent);background:var(--accent-dim);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3);}
-  .suggestion-card i{color:var(--accent);font-size:14px;margin-bottom:8px;display:block;}
-  .suggestion-card span{font-size:13px;color:var(--text-secondary);line-height:1.5;}
-
-  .input-area{padding:16px 24px 20px;border-top:1px solid var(--border);background:rgba(10,10,11,.85);backdrop-filter:blur(12px);}
-  .input-wrapper{max-width:860px;margin:0 auto;display:flex;align-items:flex-end;gap:10px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:14px;padding:10px 14px;transition:border-color .2s ease,box-shadow .2s ease;}
-  .input-wrapper:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
-  .input-wrapper textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text-primary);font-family:'Space Grotesk',sans-serif;font-size:14.5px;line-height:1.5;resize:none;max-height:150px;padding:4px 0;}
-  .input-wrapper textarea::placeholder{color:var(--text-muted);}
-  .send-btn{width:38px;height:38px;border-radius:10px;border:none;background:var(--accent);color:#0a0a0b;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;flex-shrink:0;}
-  .send-btn:hover{background:#f0b540;transform:scale(1.05);}
-  .send-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;}
-  .send-btn.loading{animation:sendPulse 1s infinite;}
-  @keyframes sendPulse{0%,100%{opacity:.5}50%{opacity:1}}
-  .input-hint{text-align:center;font-size:11px;color:var(--text-muted);margin-top:8px;max-width:860px;margin-left:auto;margin-right:auto;}
-
-  .toast-container{position:fixed;top:20px;right:20px;z-index:100;display:flex;flex-direction:column;gap:8px;}
-  .toast{padding:12px 20px;border-radius:10px;font-size:13px;font-family:'Space Grotesk',sans-serif;max-width:380px;animation:toastIn .3s ease,toastOut .3s ease 3.7s forwards;box-shadow:0 8px 30px rgba(0,0,0,.4);line-height:1.5;}
-  .toast.error{background:var(--danger);color:white;}.toast.success{background:var(--success);color:#0a0a0b;}.toast.warning{background:#f59e0b;color:#0a0a0b;}.toast.teach-toast{background:var(--teach);color:#0a0a0b;}
-  @keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-  @keyframes toastOut{to{opacity:0;transform:translateX(40px)}}
-
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
-  .modal-overlay.active{display:flex;}
-  .modal{background:var(--bg-secondary);border:1px solid var(--border);border-radius:16px;width:100%;max-width:500px;animation:modalIn .3s cubic-bezier(.16,1,.3,1);overflow:hidden;}
-  @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
-  .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-  .modal-header h3{font-size:16px;font-weight:700;}
-  .modal-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s ease;}
-  .modal-close:hover{background:var(--bg-tertiary);color:var(--text-primary);}
-  .modal-body{padding:24px;}
-  .modal-body label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;}
-  .modal-body .hint{font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.5;}
-  .modal-body input[type="password"]{width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .2s ease;}
-  .modal-body input[type="password"]:focus{border-color:var(--accent);}
-  .modal-body input[type="password"]::placeholder{color:var(--text-muted);font-family:'Space Grotesk',sans-serif;}
-  .key-status{margin-top:10px;font-size:12px;padding:8px 12px;border-radius:8px;display:none;}
-  .key-status.valid{display:block;background:rgba(61,214,140,.08);border:1px solid rgba(61,214,140,.2);color:var(--success);}
-  .key-status.invalid{display:block;background:rgba(232,72,85,.08);border:1px solid rgba(232,72,85,.2);color:#f08090;}
-  .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
-  .btn-secondary{padding:9px 18px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s ease;}
-  .btn-secondary:hover{background:var(--bg-tertiary);color:var(--text-primary);}
-  .btn-primary{padding:9px 18px;border-radius:9px;border:none;background:var(--accent);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s ease;}
-  .btn-primary:hover{background:#f0b540;}
-  .btn-danger{padding:9px 18px;border-radius:9px;border:1px solid rgba(232,72,85,.3);background:rgba(232,72,85,.08);color:var(--danger);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s ease;}
-  .btn-danger:hover{background:rgba(232,72,85,.15);}
-
-  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:25;}
-  .sidebar-overlay.active{display:block;}
-
-  @media(max-width:768px){
-    .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:30;}.sidebar.collapsed{transform:translateX(-100%);}
-    .suggestions{grid-template-columns:1fr;}.message-row{padding:6px 16px;}
-    .input-area{padding:12px 16px 16px;}.top-bar{padding:12px 16px;}
-    .setup-steps{flex-direction:column;gap:8px;}
-  }
-  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+@media(max-width:768px){
+  .chat-inner{padding:0 14px}.input-bar{padding:8px 14px 12px}.sug-grid{grid-template-columns:1fr}
+  .topbar-model{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
-<body>
-<div class="bg-ambient"></div>
-<div class="toast-container" id="toastContainer"></div>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<body style="display:flex;flex-direction:column;height:100vh;">
+<div class="bg-ambient" style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 500px 350px at 50% 0%,rgba(232,168,50,.03) 0%,transparent 70%)"></div>
+<div class="toast-c" id="tc"></div>
+<div class="side-overlay" id="sOverlay" onclick="closePanel()"></div>
 
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3><i class="fas fa-gear" style="margin-right:8px;color:var(--accent);"></i>Settings</h3>
-      <button class="modal-close" onclick="closeSettings()"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <label>OpenRouter API Key</label>
-      <p class="hint">Stored locally in your browser only. Get one at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent);text-decoration:underline;">openrouter.ai/keys</a></p>
-      <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off">
-      <div class="key-status" id="keyStatus"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-danger" onclick="clearAllData()"><i class="fas fa-trash-can" style="margin-right:6px;"></i>Clear All</button>
-      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
-      <button class="btn-primary" onclick="saveApiKey()"><i class="fas fa-check" style="margin-right:6px;"></i>Save</button>
+<!-- Side panel -->
+<div class="side-panel" id="sPanel">
+  <div class="sp-head"><h3>History & Memory</h3><button class="sp-close" onclick="closePanel()"><i class="fas fa-xmark"></i></button></div>
+  <div class="sp-tabs">
+    <div class="sp-tab on" id="stChats" onclick="spTab('chats')">Chats</div>
+    <div class="sp-tab" id="stKnow" onclick="spTab('knowledge')">Memory <span id="kCount" style="font-size:9px;opacity:.7"></span></div>
+  </div>
+  <div class="sp-body" id="spChats"></div>
+  <div class="sp-body" id="spKnow" style="display:none"></div>
+  <div class="sp-foot"><button class="sp-new" onclick="newChat()"><i class="fas fa-plus"></i> New Conversation</button></div>
+</div>
+
+<!-- Top bar -->
+<div class="topbar" style="position:relative;z-index:1;">
+  <div class="topbar-logo">M</div>
+  <span class="topbar-name">MMJ Assistant</span>
+  <div class="topbar-spacer"></div>
+  <select class="topbar-model" id="modelSel">
+    <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
+    <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash</option>
+    <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+    <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+    <option value="deepseek/deepseek-chat-v3-0324">DeepSeek V3</option>
+    <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
+  </select>
+  <button class="topbar-btn" onclick="openPanel()" title="History"><i class="fas fa-clock-rotate-left"></i></button>
+</div>
+
+<!-- Chat -->
+<div class="chat-area" id="chatArea" style="flex:1;position:relative;z-index:1;">
+  <div class="chat-inner" id="chatInner">
+    <div class="welcome" id="welcomeEl">
+      <div class="welcome-logo">M</div>
+      <h2>What can I help with?</h2>
+      <p>Ask me anything — code, writing, analysis, math, or just chat. Click <strong>Teach</strong> on any response to correct me permanently.</p>
+      <div class="sug-grid">
+        <div class="sug-card" onclick="useSug('Explain quantum computing in simple terms')"><i class="fas fa-atom"></i><span>Explain quantum computing simply</span></div>
+        <div class="sug-card" onclick="useSug('Write a Python function to find the longest palindromic substring')"><i class="fas fa-code"></i><span>Python palindromic substring</span></div>
+        <div class="sug-card" onclick="useSug('Compare REST vs GraphQL APIs with pros and cons')"><i class="fas fa-diagram-project"></i><span>REST vs GraphQL comparison</span></div>
+        <div class="sug-card" onclick="useSug('Design a database schema for an e-commerce platform')"><i class="fas fa-database"></i><span>E-commerce DB schema</span></div>
+      </div>
     </div>
   </div>
 </div>
 
-<div style="display:flex;height:100vh;position:relative;z-index:1;">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="brand">
-        <div class="brand-icon">M</div>
-        <div class="brand-text"><h1>MMJ Assistant</h1><span>AI-Powered Intelligence</span></div>
-      </div>
-    </div>
-    <button class="new-chat-btn" onclick="createNewChat()"><i class="fas fa-plus"></i> New Conversation</button>
-    <div class="sidebar-tabs">
-      <div class="sidebar-tab active" id="tabChats" onclick="switchTab('chats')"><i class="fas fa-message" style="margin-right:4px;"></i> Chats</div>
-      <div class="sidebar-tab" id="tabKnowledge" onclick="switchTab('knowledge')"><i class="fas fa-brain" style="margin-right:4px;"></i> Memory <span id="knowledgeCount" style="margin-left:4px;font-size:10px;opacity:.7;"></span></div>
-    </div>
-    <div class="chat-list" id="chatList"></div>
-    <div class="knowledge-list" id="knowledgeList" style="display:none;"></div>
-    <div class="sidebar-footer">
-      <select class="model-selector" id="modelSelector" aria-label="Select AI model">
-        <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
-        <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash</option>
-        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-        <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
-        <option value="deepseek/deepseek-chat-v3-0324">DeepSeek V3</option>
-        <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
-      </select>
-      <button class="settings-btn" onclick="openSettings()"><i class="fas fa-gear"></i> Change API Key</button>
-    </div>
-  </aside>
-
-  <main class="main-area">
-    <div class="top-bar">
-      <button class="toggle-sidebar" onclick="toggleSidebar()" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
-      <span class="top-bar-title" id="topBarTitle">MMJ Assistant</span>
-      <span class="top-bar-badge teach" id="teachBadge"><i class="fas fa-brain"></i> <span id="teachBadgeCount">0</span></span>
-      <div class="status-dot" id="statusDot"></div>
-      <span class="status-text" id="statusText">No API Key</span>
-    </div>
-
-    <!-- Setup screen: shown when no key -->
-    <div class="setup-screen" id="setupScreen">
-      <div class="setup-icon">M</div>
-      <h2>Welcome to MMJ Assistant</h2>
-      <p>To get started, you need an OpenRouter API key. It's free to create an account and some models have free tiers.</p>
-      <div class="setup-box">
-        <div class="setup-box-header"><i class="fas fa-key"></i><span>Enter Your API Key</span></div>
-        <div class="setup-box-body">
-          <label>OpenRouter API Key</label>
-          <p class="setup-hint">Your key is stored only in your browser's local storage. It never leaves your device except to connect to OpenRouter directly.<br>Get your key: <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></p>
-          <input type="password" class="setup-input" id="setupKeyInput" placeholder="sk-or-v1-xxxxxxxxxxxx" autocomplete="off">
-          <div class="setup-status" id="setupStatus"></div>
-        </div>
-        <div class="setup-box-footer">
-          <button class="setup-submit" id="setupSubmitBtn" onclick="validateAndSaveSetupKey()">
-            <i class="fas fa-arrow-right"></i> Connect & Start
-          </button>
-        </div>
-      </div>
-      <div class="setup-steps">
-        <div class="setup-step"><div class="step-num">1</div><p>Create a free account at openrouter.ai</p></div>
-        <div class="setup-step"><div class="step-num">2</div><p>Go to Keys and create an API key</p></div>
-        <div class="setup-step"><div class="step-num">3</div><p>Paste it above and start chatting</p></div>
-      </div>
-    </div>
-
-    <!-- Welcome screen: shown when key exists but no active chat messages -->
-    <div class="messages-container" id="messagesContainer" style="display:none;">
-      <div class="welcome-screen" id="welcomeScreen">
-        <div class="welcome-icon">M</div>
-        <h2>Welcome to MMJ Assistant</h2>
-        <p>Your professional AI companion. If the AI gives a wrong answer, click <strong>Teach</strong> to correct it permanently.</p>
-        <div class="suggestions">
-          <div class="suggestion-card" onclick="useSuggestion('Explain quantum computing in simple terms')"><i class="fas fa-atom"></i><span>Explain quantum computing in simple terms</span></div>
-          <div class="suggestion-card" onclick="useSuggestion('Write a Python function to find the longest palindromic substring')"><i class="fas fa-code"></i><span>Write a Python function for longest palindromic substring</span></div>
-          <div class="suggestion-card" onclick="useSuggestion('Compare REST vs GraphQL with pros and cons')"><i class="fas fa-diagram-project"></i><span>Compare REST vs GraphQL with pros and cons</span></div>
-          <div class="suggestion-card" onclick="useSuggestion('Design a database schema for an e-commerce platform')"><i class="fas fa-database"></i><span>Design a database schema for e-commerce</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="input-area" id="inputArea" style="display:none;">
-      <div class="input-wrapper">
-        <textarea id="userInput" rows="1" placeholder="Message MMJ Assistant..." aria-label="Type your message"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message"><i class="fas fa-arrow-up"></i></button>
-      </div>
-      <div class="input-hint">Press <strong>Teach</strong> on any response to save it to memory permanently.</div>
-    </div>
-  </main>
+<!-- Input -->
+<div class="input-bar" style="position:relative;z-index:1;">
+  <div class="input-wrap">
+    <textarea id="uInput" rows="1" placeholder="Ask MMJ Assistant anything..." aria-label="Message"></textarea>
+    <button class="send-b" id="sendBtn" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
+  </div>
 </div>
 
 <script>
-  const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const KEY='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';
+const API='https://openrouter.ai/api/v1/chat/completions';
+function getK(){return JSON.parse(localStorage.getItem('mmj_k')||'[]')}
+function saveK(k){localStorage.setItem('mmj_k',JSON.stringify(k))}
 
-  function getApiKey() { return localStorage.getItem('mmj_api_key') || ''; }
-  function hasApiKey() { return !!getApiKey(); }
-  function getKnowledge() { return JSON.parse(localStorage.getItem('mmj_knowledge') || '[]'); }
-  function saveKnowledge(k) { localStorage.setItem('mmj_knowledge', JSON.stringify(k)); }
+let chats=JSON.parse(localStorage.getItem('mmj_c')||'[]');
+let activeId=null,generating=false,abortC=null,openTF=null;
 
-  let conversations = JSON.parse(localStorage.getItem('mmj_conversations') || '[]');
-  let activeConversationId = null;
-  let isGenerating = false;
-  let abortController = null;
-  let currentTab = 'chats';
-  let openTeachFormId = null;
+function init(){
+  if(chats.length)loadChat(chats[0].id);
+  renderSPChats();renderSPKnow();updKCount();
+  const ta=document.getElementById('uInput');
+  ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';});
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+}
 
-  function init() {
-    if (hasApiKey()) {
-      showMainApp();
-    } else {
-      showSetupScreen();
-    }
-    renderChatList();
-    renderKnowledgeList();
-    updateTeachBadge();
-    updateStatusUI();
-    setupTextarea();
-    // Enter key on setup input
-    document.getElementById('setupKeyInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); validateAndSaveSetupKey(); }
-    });
-  }
+/* Side panel */
+function openPanel(){document.getElementById('sPanel').classList.add('open');document.getElementById('sOverlay').classList.add('open');renderSPChats();renderSPKnow();}
+function closePanel(){document.getElementById('sPanel').classList.remove('open');document.getElementById('sOverlay').classList.remove('open');}
+function spTab(t){
+  document.getElementById('stChats').classList.toggle('on',t==='chats');document.getElementById('stKnow').classList.toggle('on',t==='knowledge');
+  document.getElementById('spChats').style.display=t==='chats'?'block':'none';document.getElementById('spKnow').style.display=t==='knowledge'?'block':'none';
+  if(t==='knowledge')renderSPKnow();
+}
 
-  // ===================== Screen switching =====================
-  function showSetupScreen() {
-    document.getElementById('setupScreen').style.display = 'flex';
-    document.getElementById('messagesContainer').style.display = 'none';
-    document.getElementById('inputArea').style.display = 'none';
-    document.getElementById('topBarTitle').textContent = 'MMJ Assistant';
-  }
+function renderSPChats(){
+  const el=document.getElementById('spChats');
+  if(!chats.length){el.innerHTML='<div class="k-empty"><i class="fas fa-message"></i>No conversations yet</div>';return;}
+  el.innerHTML=chats.map(c=>`<div class="sp-item ${c.id===activeId?'on':''}" onclick="loadChat('${c.id}');closePanel()"><i class="fas fa-message" style="font-size:11px;opacity:.5"></i><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.title)}</span><span class="sp-item-del" onclick="delChat('${c.id}',event)"><i class="fas fa-trash-can"></i></span></div>`).join('');
+}
+function renderSPKnow(){
+  const el=document.getElementById('spKnow'),k=getK();
+  document.getElementById('kCount').textContent=k.length?`(${k.length})`:'';
+  if(!k.length){el.innerHTML='<div class="k-empty"><i class="fas fa-brain"></i>No memories yet.<br>Click Teach on any response.</div>';return;}
+  el.innerHTML=k.map((item,i)=>`<div class="k-item"><div class="k-q"><i class="fas fa-bookmark" style="margin-right:3px;font-size:8px"></i>${esc(item.topic)}</div><div class="k-a">${esc(item.answer)}</div><span class="k-del" onclick="delK(${i})"><i class="fas fa-trash-can"></i></span></div>`).join('');
+}
+function delK(i){const k=getK();k.splice(i,1);saveK(k);renderSPKnow();updKCount();toast('Memory removed','ok');}
+function updKCount(){document.getElementById('kCount').textContent=getK().length?`(${getK().length})`:'';}
 
-  function showMainApp() {
-    document.getElementById('setupScreen').style.display = 'none';
-    document.getElementById('messagesContainer').style.display = 'flex';
-    document.getElementById('inputArea').style.display = 'block';
-    if (conversations.length > 0) {
-      loadConversation(conversations[0].id);
-    } else {
-      document.getElementById('topBarTitle').textContent = 'New Conversation';
-      showWelcome();
-    }
-  }
+function addKnow(topic,answer,ctx){
+  const k=getK();const idx=k.findIndex(x=>x.topic.toLowerCase()===topic.toLowerCase());
+  if(idx>=0){k[idx].answer=answer;k[idx].ctx=ctx||'';toast('Memory updated','tt');}
+  else{k.unshift({topic,answer,ctx:ctx||'',ts:Date.now()});toast('Memory saved — AI will remember this','tt');}
+  saveK(k);renderSPKnow();updKCount();
+}
 
-  function updateStatusUI() {
-    const dot = document.getElementById('statusDot');
-    const st = document.getElementById('statusText');
-    if (hasApiKey()) {
-      dot.className = 'status-dot ok'; st.textContent = 'Online';
-    } else {
-      dot.className = 'status-dot off'; st.textContent = 'No API Key';
-    }
-  }
+function buildSys(){
+  const k=getK();let p='You are MMJ Assistant, a highly capable, professional, and helpful AI assistant. Provide clear, well-structured, accurate responses. Use markdown for code blocks, lists, headings. Be concise but thorough.';
+  if(k.length){p+='\n\n## The user taught you the following. Use this when relevant. Prioritize over default knowledge:\n\n';k.forEach((item,i)=>{p+=`### Taught #${i+1}\n**Topic:** ${item.topic}\n**Answer:** ${item.answer}\n`;if(item.ctx)p+=`**Context:** ${item.ctx}\n`;p+='\n';});p+='IMPORTANT: Use taught answers when relevant. Don\'t contradict them.\n';}
+  return p;
+}
 
-  // ===================== Setup validation =====================
-  async function validateAndSaveSetupKey() {
-    const input = document.getElementById('setupKeyInput');
-    const status = document.getElementById('setupStatus');
-    const btn = document.getElementById('setupSubmitBtn');
-    const key = input.value.trim();
+/* Chats */
+function newChat(){const id='c_'+Date.now();chats.unshift({id,title:'New Conversation',msgs:[],ts:Date.now()});saveC();loadChat(id);renderSPChats();closePanel();}
+function loadChat(id){activeId=id;const c=chats.find(x=>x.id===id);if(!c)return;document.querySelector('.topbar-name').textContent=c.title;renderSPChats();renderMsgs(c.msgs);closePanel();}
+function delChat(id,e){e.stopPropagation();chats=chats.filter(x=>x.id!==id);saveC();if(activeId===id){activeId=null;if(chats.length)loadChat(chats[0].id);else{document.querySelector('.topbar-name').textContent='MMJ Assistant';showWelcome();}}renderSPChats();}
+function saveC(){localStorage.setItem('mmj_c',JSON.stringify(chats));}
+function getAC(){return chats.find(x=>x.id===activeId);}
 
-    if (!key) { showToast('Please paste your API key', 'warning'); input.focus(); return; }
+function showWelcome(){document.getElementById('welcomeEl').style.display='flex';document.getElementById('chatInner').querySelectorAll('.msg-block').forEach(e=>e.remove());}
+function renderMsgs(msgs){
+  const inner=document.getElementById('chatInner'),w=document.getElementById('welcomeEl');inner.querySelectorAll('.msg-block').forEach(e=>e.remove());
+  if(!msgs.length){w.style.display='flex';return;}w.style.display='none';
+  msgs.forEach((m,i)=>{const b=mkBlock(m,i);b.style.animationDelay=(i*0.025)+'s';inner.appendChild(b);});scrollBot();
+}
 
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validating...';
-    status.className = 'setup-status checking';
-    status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying your key with OpenRouter...';
+function mkBlock(msg,idx){
+  const b=document.createElement('div');b.className='msg-block';
+  const isU=msg.role==='user',isE=msg.role==='error';
+  const t=new Date(msg.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const mid='m'+msg.ts+'_'+idx;
+  if(isE){b.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span><span class="msg-time">${t}</span></div><div class="err-bub"><i class="fas fa-circle-exclamation"></i>${msg.content}</div>`;}
+  else if(isU){b.innerHTML=`<div class="msg-head"><span class="msg-name user-n">You</span><span class="msg-time">${t}</span></div><div class="msg-body">${esc(msg.content)}</div>`;}
+  else{const taught=msg.taught;b.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span>${taught?'<span class="msg-taught"><i class="fas fa-brain"></i> Taught</span>':''}<span class="msg-time">${t}</span></div><div class="msg-body">${renderMD(msg.content)}</div><div class="msg-acts" id="a_${mid}"><button class="m-act t-act ${taught?'on':''}" onclick="togTF('${mid}',${idx})" id="tb_${mid}" ${taught?'style="pointer-events:none"':''}><i class="fas fa-graduation-cap"></i> ${taught?'Taught':'Teach'}</button><button class="m-act" onclick="copyMT(${idx})"><i class="fas fa-copy"></i> Copy</button></div><div id="tf_${mid}" style="display:none"></div>`;}
+  return b;
+}
 
-    try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'MMJ Assistant' },
-        body: JSON.stringify({ model: 'meta-llama/llama-3.3-70b-instruct', messages: [{ role: 'user', content: 'Hi' }], max_tokens: 1 })
-      });
+/* Teach */
+function togTF(mid,idx){
+  const fel=document.getElementById('tf_'+mid),btn=document.getElementById('tb_'+mid);
+  if(openTF&&openTF!==mid){const o=document.getElementById('tf_'+openTF),ob=document.getElementById('tb_'+openTF);if(o)o.style.display='none';if(ob)ob.classList.remove('on');}
+  if(!fel.innerHTML||fel.style.display==='none'){
+    const c=getAC();const pv=c&&c.msgs[idx]?c.msgs[idx].content.substring(0,140).trim():'';
+    fel.innerHTML=`<div class="tf"><div class="tf-h"><i class="fas fa-graduation-cap"></i> Teach MMJ Assistant</div><div class="tf-b"><label>Topic</label><input id="tt_${mid}" placeholder="e.g. What is X?"><label>Correct Answer</label><textarea id="ta_${mid}" placeholder="What should the AI say...">${esc(pv)}</textarea></div><div class="tf-f"><button class="tf-cancel" onclick="togTF('${mid}',${idx})">Cancel</button><button class="tf-save" onclick="saveTeach('${mid}',${idx})"><i class="fas fa-check" style="margin-right:3px"></i>Save</button></div></div>`;
+    fel.style.display='block';btn.classList.add('on');openTF=mid;setTimeout(()=>{const el=document.getElementById('tt_'+mid);if(el)el.focus();},60);
+  }else{fel.style.display='none';btn.classList.remove('on');openTF=null;}
+}
 
-      if (res.ok) {
-        localStorage.setItem('mmj_api_key', key);
-        status.className = 'setup-status valid';
-        status.innerHTML = '<i class="fas fa-check-circle"></i> Key validated! Launching MMJ Assistant...';
-        updateStatusUI();
-        showToast('Connected successfully!', 'success');
-        setTimeout(() => { showMainApp(); }, 600);
-      } else {
-        const err = await res.json().catch(() => ({}));
-        let msg = err.error?.message || `HTTP ${res.status}`;
-        if (msg.toLowerCase().includes('user not found') || msg.toLowerCase().includes('invalid') || res.status === 401)
-          msg = 'Invalid key or account not found. Please double-check your key at openrouter.ai/keys';
-        else if (msg.toLowerCase().includes('credit') || msg.toLowerCase().includes('insufficient') || res.status === 402)
-          msg = 'Account has no credits. Add credits at openrouter.ai/credits';
-        status.className = 'setup-status invalid';
-        status.innerHTML = `<i class="fas fa-xmark-circle"></i> ${escapeHtml(msg)}`;
-      }
-    } catch (err) {
-      status.className = 'setup-status invalid';
-      status.innerHTML = `<i class="fas fa-xmark-circle"></i> Connection failed: ${escapeHtml(err.message)}`;
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-arrow-right"></i> Connect & Start';
-    }
-  }
+function saveTeach(mid,idx){
+  const topic=document.getElementById('tt_'+mid).value.trim(),answer=document.getElementById('ta_'+mid).value.trim();
+  if(!topic){toast('Enter a topic','warn');return;}if(!answer){toast('Enter the answer','warn');return;}
+  const c=getAC();let ctx='';
+  if(c&&idx>0&&c.msgs[idx-1].role==='user'){ctx=c.msgs[idx-1].content;c.msgs[idx].taught=true;saveC();}
+  addKnow(topic,answer,ctx);
+  const btn=document.getElementById('tb_'+mid);btn.classList.remove('on');btn.innerHTML='<i class="fas fa-check"></i> Taught';btn.style.pointerEvents='none';
+  document.getElementById('tf_'+mid).style.display='none';openTF=null;
+  const hd=btn.closest('.msg-block').querySelector('.msg-head');
+  if(!hd.querySelector('.msg-taught'))hd.innerHTML+=' <span class="msg-taught"><i class="fas fa-brain"></i> Taught</span>';
+}
 
-  // ===================== Tabs =====================
-  function switchTab(tab) {
-    currentTab = tab;
-    document.getElementById('tabChats').classList.toggle('active', tab === 'chats');
-    document.getElementById('tabKnowledge').classList.toggle('active', tab === 'knowledge');
-    document.getElementById('chatList').style.display = tab === 'chats' ? 'block' : 'none';
-    document.getElementById('knowledgeList').style.display = tab === 'knowledge' ? 'block' : 'none';
-    if (tab === 'knowledge') renderKnowledgeList();
-  }
+function copyMT(idx){const c=getAC();if(!c||!c.msgs[idx])return;navigator.clipboard.writeText(c.msgs[idx].content).then(()=>toast('Copied','ok'));}
 
-  // ===================== Knowledge =====================
-  function renderKnowledgeList() {
-    const list = document.getElementById('knowledgeList');
-    const knowledge = getKnowledge();
-    document.getElementById('knowledgeCount').textContent = knowledge.length > 0 ? `(${knowledge.length})` : '';
-    if (knowledge.length === 0) {
-      list.innerHTML = '<div class="knowledge-empty"><i class="fas fa-brain"></i>No memories yet.<br>Click <strong>Teach</strong> on any AI response to save it permanently.</div>';
-      return;
-    }
-    list.innerHTML = knowledge.map((item, i) => `
-      <div class="knowledge-item">
-        <div class="knowledge-item-q"><i class="fas fa-bookmark" style="margin-right:5px;font-size:10px;"></i>${escapeHtml(item.topic)}</div>
-        <div class="knowledge-item-a">${escapeHtml(item.answer)}</div>
-        <span class="knowledge-item-del" onclick="deleteKnowledge(${i})"><i class="fas fa-trash-can"></i></span>
-      </div>`).join('');
-  }
+/* Markdown */
+function renderMD(text){
+  if(!text)return '';
+  marked.setOptions({highlight:function(c,l){if(l&&hljs.getLanguage(l))return hljs.highlight(c,{language:l}).value;return hljs.highlightAuto(c).value;},breaks:true,gfm:true});
+  let h=marked.parse(text);
+  h=h.replace(/<pre><code class="language-(\w+)">/g,(m,l)=>`<pre><div class="code-hdr"><span>${l}</span><button class="copy-cb" onclick="copyC(this)"><i class="fas fa-copy"></i> Copy</button></div><code class="language-${l}">`);
+  h=h.replace(/<pre><code>/g,()=>`<pre><div class="code-hdr"><span>code</span><button class="copy-cb" onclick="copyC(this)"><i class="fas fa-copy"></i> Copy</button></div><code>`);
+  return h;
+}
+function copyC(btn){navigator.clipboard.writeText(btn.closest('pre').querySelector('code').textContent).then(()=>{btn.innerHTML='<i class="fas fa-check"></i> Copied';btn.style.color='var(--ok)';setTimeout(()=>{btn.innerHTML='<i class="fas fa-copy"></i> Copy';btn.style.color='';},1200);});}
 
-  function deleteKnowledge(i) {
-    const k = getKnowledge(); k.splice(i, 1); saveKnowledge(k);
-    renderKnowledgeList(); updateTeachBadge(); showToast('Memory removed', 'success');
-  }
+/* Send */
+async function sendMsg(){
+  const inp=document.getElementById('uInput'),text=inp.value.trim();
+  if(!text||generating)return;if(!activeId)newChat();
+  const c=getAC();if(!c)return;
+  document.getElementById('welcomeEl').style.display='none';
+  const um={role:'user',content:text,ts:Date.now()};c.msgs.push(um);
+  if(c.msgs.filter(m=>m.role==='user').length===1){c.title=text.substring(0,50)+(text.length>50?'...':'');document.querySelector('.topbar-name').textContent=c.title;renderSPChats();}
+  const inner=document.getElementById('chatInner');inner.appendChild(mkBlock(um,c.msgs.length-1));scrollBot();inp.value='';inp.style.height='auto';
 
-  function updateTeachBadge() {
-    const c = getKnowledge().length;
-    const b = document.getElementById('teachBadge');
-    document.getElementById('teachBadgeCount').textContent = c;
-    b.classList.toggle('visible', c > 0);
-  }
+  const tb=document.createElement('div');tb.className='msg-block';tb.id='typB';
+  tb.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span></div><div class="typing-d"><span></span><span></span><span></span></div>`;
+  inner.appendChild(tb);scrollBot();generating=true;updBtn();
 
-  function addKnowledge(topic, answer, context) {
-    const k = getKnowledge();
-    const idx = k.findIndex(item => item.topic.toLowerCase() === topic.toLowerCase());
-    if (idx >= 0) {
-      k[idx].answer = answer; k[idx].context = context || ''; k[idx].updatedAt = Date.now();
-      showToast('Memory updated', 'teach-toast');
-    } else {
-      k.unshift({ topic, answer, context: context || '', createdAt: Date.now(), updatedAt: Date.now() });
-      showToast('Memory saved — AI will remember this', 'teach-toast');
-    }
-    saveKnowledge(k); renderKnowledgeList(); updateTeachBadge();
-  }
+  try{
+    const model=document.getElementById('modelSel').value;
+    const apiM=[{role:'system',content:buildSys()},...c.msgs.filter(m=>m.role!=='error').map(m=>({role:m.role,content:m.content}))];
+    abortC=new AbortController();
+    const res=await fetch(API,{method:'POST',headers:{'Authorization':`Bearer ${KEY}`,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'MMJ Assistant'},body:JSON.stringify({model,messages:apiM,stream:true,max_tokens:4096}),signal:abortC.signal});
+    if(!res.ok){let em=`API error (${res.status})`;try{const e=await res.json();em=e.error?.message||em;if(res.status===401||em.toLowerCase().includes('user not found')||em.toLowerCase().includes('invalid'))em='Invalid API key.';else if(res.status===402||em.toLowerCase().includes('credit'))em='No credits on account.';else if(res.status===429)em='Rate limited. Wait and retry.';else if(res.status>=500)em='Server error. Try shortly.';}catch(e){}throw new Error(em);}
 
-  function buildSystemPrompt() {
-    const knowledge = getKnowledge();
-    let prompt = 'You are MMJ Assistant, a highly capable, professional, and helpful AI assistant. You provide clear, well-structured, and accurate responses. Use markdown formatting when appropriate for code blocks, lists, headings, and emphasis. Be concise but thorough.';
-    if (knowledge.length > 0) {
-      prompt += '\n\n## The user has taught you the following knowledge. You MUST use this information when relevant. If the user asks about any of these topics, prioritize the taught information over your default knowledge:\n\n';
-      knowledge.forEach((item, i) => {
-        prompt += `### Taught Knowledge #${i + 1}\n**Topic:** ${item.topic}\n**Answer:** ${item.answer}\n`;
-        if (item.context) prompt += `**Original context:** ${item.context}\n`;
-        prompt += '\n';
-      });
-      prompt += 'IMPORTANT: When the user asks about a topic you\'ve been taught, use the taught answer. If the taught information seems incomplete, supplement it carefully but don\'t contradict the taught knowledge.\n';
-    }
-    return prompt;
-  }
+    tb.remove();
+    const am={role:'assistant',content:'',ts:Date.now(),taught:false};c.msgs.push(am);
+    const mi=c.msgs.length-1,mid='m'+am.ts+'_'+mi;
+    const ab=document.createElement('div');ab.className='msg-block';
+    ab.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span><span class="msg-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span></div><div class="msg-body" id="sBody"></div><div class="msg-acts" style="opacity:0" id="sActs"><button class="m-act t-act" onclick="togTF('${mid}',${mi})" id="tb_${mid}"><i class="fas fa-graduation-cap"></i> Teach</button><button class="m-act" onclick="copyStreamed()"><i class="fas fa-copy"></i> Copy</button></div><div id="tf_${mid}" style="display:none"></div>`;
+    inner.appendChild(ab);
 
-  // ===================== Settings modal =====================
-  function openSettings() {
-    document.getElementById('settingsModal').classList.add('active');
-    document.getElementById('apiKeyInput').value = getApiKey();
-    document.getElementById('keyStatus').className = 'key-status';
-    document.getElementById('keyStatus').style.display = 'none';
-    closeSidebarMobile();
-  }
-  function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); }
-  document.getElementById('settingsModal').addEventListener('click', function(e) { if (e.target === this) closeSettings(); });
+    const sb=document.getElementById('sBody');let ft='';
+    const rd=res.body.getReader(),dc=new TextDecoder();let buf='';
+    while(true){const{done,value}=await rd.read();if(done)break;buf+=dc.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop()||'';for(const l of lines){const tr=l.trim();if(!tr||!tr.startsWith('data:'))continue;const d=tr.slice(5).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);const delta=p.choices?.[0]?.delta?.content;if(delta){ft+=delta;am.content=ft;sb.innerHTML=renderMD(ft);scrollBot();}}catch(e){}}}
+    sb.removeAttribute('id');sb.innerHTML=renderMD(ft);
+    const sa=document.getElementById('sActs');if(sa)sa.style.opacity='';saveC();
+  }catch(err){
+    const te=document.getElementById('typB');if(te)te.remove();
+    if(err.name==='AbortError')toast('Stopped','ok');
+    else{const em={role:'error',content:err.message,ts:Date.now()};c.msgs.push(em);inner.appendChild(mkBlock(em,c.msgs.length-1));scrollBot();saveC();}
+  }finally{generating=false;abortC=null;updBtn();saveC();}
+}
 
-  async function saveApiKey() {
-    const input = document.getElementById('apiKeyInput');
-    const status = document.getElementById('keyStatus');
-    const key = input.value.trim();
-    if (!key) {
-      localStorage.removeItem('mmj_api_key');
-      status.className = 'key-status invalid';
-      status.innerHTML = '<i class="fas fa-info-circle"></i> Key removed. You will see the setup screen next.';
-      updateStatusUI(); return;
-    }
-    status.className = 'key-status'; status.style.display = 'block';
-    status.style.background = 'var(--accent-dim)'; status.style.border = '1px solid rgba(232,168,50,.2)'; status.style.color = 'var(--accent)';
-    status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validating...';
-    try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'MMJ Assistant' },
-        body: JSON.stringify({ model: 'meta-llama/llama-3.3-70b-instruct', messages: [{ role: 'user', content: 'Hi' }], max_tokens: 1 })
-      });
-      if (res.ok) {
-        localStorage.setItem('mmj_api_key', key);
-        status.className = 'key-status valid';
-        status.innerHTML = '<i class="fas fa-check-circle"></i> Key validated and saved.';
-        updateStatusUI(); showToast('API key saved', 'success');
-      } else {
-        const err = await res.json().catch(() => ({}));
-        status.className = 'key-status invalid';
-        status.innerHTML = `<i class="fas fa-xmark-circle"></i> ${escapeHtml(err.error?.message || `HTTP ${res.status}`)}`;
-      }
-    } catch (err) {
-      status.className = 'key-status invalid';
-      status.innerHTML = `<i class="fas fa-xmark-circle"></i> ${escapeHtml(err.message)}`;
-    }
-  }
-
-  function clearAllData() {
-    if (!confirm('Delete all conversations, memories, and API key?')) return;
-    localStorage.removeItem('mmj_conversations'); localStorage.removeItem('mmj_api_key'); localStorage.removeItem('mmj_knowledge');
-    conversations = []; activeConversationId = null;
-    renderChatList(); renderKnowledgeList(); updateTeachBadge(); updateStatusUI();
-    closeSettings(); showSetupScreen();
-    document.getElementById('setupKeyInput').value = '';
-    document.getElementById('setupStatus').className = 'setup-status';
-    showToast('All data cleared', 'success');
-  }
-
-  // ===================== Textarea =====================
-  function setupTextarea() {
-    const ta = document.getElementById('userInput');
-    ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 150) + 'px'; });
-    ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-  }
-
-  // ===================== Conversations =====================
-  function createNewChat() {
-    const id = 'chat_' + Date.now();
-    conversations.unshift({ id, title: 'New Conversation', messages: [], createdAt: Date.now() });
-    saveConversations(); loadConversation(id); renderChatList(); closeSidebarMobile();
-  }
-  function loadConversation(id) {
-    activeConversationId = id;
-    const chat = conversations.find(c => c.id === id); if (!chat) return;
-    document.getElementById('topBarTitle').textContent = chat.title;
-    renderChatList(); renderMessages(chat.messages); closeSidebarMobile();
-  }
-  function deleteConversation(id, e) {
-    e.stopPropagation();
-    conversations = conversations.filter(c => c.id !== id); saveConversations();
-    if (activeConversationId === id) {
-      activeConversationId = null;
-      if (conversations.length > 0) loadConversation(conversations[0].id);
-      else { document.getElementById('topBarTitle').textContent = 'New Conversation'; showWelcome(); }
-    }
-    renderChatList();
-  }
-  function saveConversations() { localStorage.setItem('mmj_conversations', JSON.stringify(conversations)); }
-  function getActiveChat() { return conversations.find(c => c.id === activeConversationId); }
-
-  function renderChatList() {
-    document.getElementById('chatList').innerHTML = conversations.map(chat => `
-      <div class="chat-item ${chat.id === activeConversationId ? 'active' : ''}" onclick="loadConversation('${chat.id}')">
-        <i class="fas fa-message chat-item-icon"></i>
-        <span class="chat-item-title">${escapeHtml(chat.title)}</span>
-        <span class="chat-item-delete" onclick="deleteConversation('${chat.id}', event)"><i class="fas fa-trash-can"></i></span>
-      </div>`).join('');
-  }
-
-  // ===================== Messages =====================
-  function showWelcome() {
-    document.getElementById('welcomeScreen').style.display = 'flex';
-    document.getElementById('messagesContainer').querySelectorAll('.message-row').forEach(el => el.remove());
-  }
-  function renderMessages(messages) {
-    const c = document.getElementById('messagesContainer');
-    const w = document.getElementById('welcomeScreen');
-    c.querySelectorAll('.message-row').forEach(el => el.remove());
-    if (messages.length === 0) { w.style.display = 'flex'; return; }
-    w.style.display = 'none';
-    messages.forEach((msg, i) => {
-      const row = createMessageElement(msg, i);
-      row.style.animationDelay = (i * 0.04) + 's';
-      c.appendChild(row);
-    });
-    scrollToBottom();
-  }
-
-  function createMessageElement(msg, index) {
-    const row = document.createElement('div'); row.className = 'message-row';
-    const isUser = msg.role === 'user'; const isError = msg.role === 'error';
-    const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const msgId = 'msg_' + msg.timestamp + '_' + index;
-
-    if (isError) {
-      row.innerHTML = `<div class="message-avatar ai">M</div><div class="message-content"><div class="message-sender">MMJ Assistant</div><div class="error-bubble"><i class="fas fa-circle-exclamation"></i>${msg.content}</div><div class="message-time">${time}</div></div>`;
-    } else if (isUser) {
-      row.innerHTML = `<div class="message-avatar user"><i class="fas fa-user" style="font-size:13px;"></i></div><div class="message-content"><div class="message-sender">You</div><div class="message-body">${escapeHtml(msg.content)}</div><div class="message-time">${time}</div></div>`;
-    } else {
-      const taught = msg.taught === true;
-      row.innerHTML = `
-        <div class="message-avatar ai">M</div>
-        <div class="message-content">
-          <div class="message-sender">MMJ Assistant${taught ? ' <span class="sender-taught-badge"><i class="fas fa-brain"></i> Taught</span>' : ''}</div>
-          <div class="message-body">${renderMarkdown(msg.content)}</div>
-          <div class="message-actions">
-            <button class="msg-action-btn teach-btn ${taught ? 'active' : ''}" onclick="toggleTeachForm('${msgId}',${index})" id="teachBtn_${msgId}" ${taught ? 'style="pointer-events:none;"' : ''}>
-              <i class="fas fa-graduation-cap"></i> ${taught ? 'Taught' : 'Teach'}
-            </button>
-            <button class="msg-action-btn" onclick="copyMessageText(${index})"><i class="fas fa-copy"></i> Copy</button>
-          </div>
-          <div id="teachForm_${msgId}" style="display:none;"></div>
-          <div class="message-time">${time}</div>
-        </div>`;
-    }
-    return row;
-  }
-
-  // ===================== Teach =====================
-  function toggleTeachForm(msgId, index) {
-    const formEl = document.getElementById('teachForm_' + msgId);
-    const btn = document.getElementById('teachBtn_' + msgId);
-    if (openTeachFormId && openTeachFormId !== msgId) {
-      const old = document.getElementById('teachForm_' + openTeachFormId);
-      const oldBtn = document.getElementById('teachBtn_' + openTeachFormId);
-      if (old) old.style.display = 'none';
-      if (oldBtn) oldBtn.classList.remove('active');
-    }
-    if (!formEl.innerHTML || formEl.style.display === 'none') {
-      const chat = getActiveChat();
-      const preview = chat && chat.messages[index] ? chat.messages[index].content.substring(0, 150).trim() : '';
-      formEl.innerHTML = `
-        <div class="teach-form">
-          <div class="teach-form-header"><i class="fas fa-graduation-cap"></i> Teach MMJ Assistant</div>
-          <div class="teach-form-body">
-            <label>Topic / Question this answers</label>
-            <input type="text" id="teachTopic_${msgId}" placeholder="e.g. What is the company refund policy?">
-            <label>Correct Answer (what the AI should say next time)</label>
-            <textarea id="teachAnswer_${msgId}" placeholder="Provide the correct or improved answer...">${escapeHtml(preview)}</textarea>
-          </div>
-          <div class="teach-form-footer">
-            <button class="teach-cancel-btn" onclick="toggleTeachForm('${msgId}',${index})">Cancel</button>
-            <button class="teach-save-btn" onclick="submitTeach('${msgId}',${index})"><i class="fas fa-check" style="margin-right:4px;"></i>Save to Memory</button>
-          </div>
-        </div>`;
-      formEl.style.display = 'block'; btn.classList.add('active'); openTeachFormId = msgId;
-      setTimeout(() => { const t = document.getElementById('teachTopic_' + msgId); if (t) t.focus(); }, 100);
-    } else {
-      formEl.style.display = 'none'; btn.classList.remove('active'); openTeachFormId = null;
-    }
-  }
-
-  function submitTeach(msgId, index) {
-    const topic = document.getElementById('teachTopic_' + msgId).value.trim();
-    const answer = document.getElementById('teachAnswer_' + msgId).value.trim();
-    if (!topic) { showToast('Please enter a topic', 'warning'); return; }
-    if (!answer) { showToast('Please enter the correct answer', 'warning'); return; }
-
-    const chat = getActiveChat();
-    let context = '';
-    if (chat && index > 0 && chat.messages[index - 1].role === 'user') {
-      context = chat.messages[index - 1].content;
-      chat.messages[index].taught = true;
-      saveConversations();
-    }
-    addKnowledge(topic, answer, context);
-
-    const btn = document.getElementById('teachBtn_' + msgId);
-    btn.classList.remove('active'); btn.innerHTML = '<i class="fas fa-check"></i> Taught'; btn.style.pointerEvents = 'none';
-    document.getElementById('teachForm_' + msgId).style.display = 'none';
-    openTeachFormId = null;
-
-    const sender = btn.closest('.message-content').querySelector('.message-sender');
-    if (!sender.querySelector('.sender-taught-badge')) sender.innerHTML += ' <span class="sender-taught-badge"><i class="fas fa-brain"></i> Taught</span>';
-  }
-
-  function copyMessageText(index) {
-    const chat = getActiveChat();
-    if (!chat || !chat.messages[index]) return;
-    navigator.clipboard.writeText(chat.messages[index].content).then(() => showToast('Copied to clipboard', 'success'));
-  }
-
-  // ===================== Markdown =====================
-  function renderMarkdown(text) {
-    if (!text) return '';
-    marked.setOptions({ highlight: function(code, lang) { if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, { language: lang }).value; return hljs.highlightAuto(code).value; }, breaks: true, gfm: true });
-    let html = marked.parse(text);
-    html = html.replace(/<pre><code class="language-(\w+)">/g, (m, lang) => `<pre><div class="code-header"><span>${lang}</span><button class="copy-code-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div><code class="language-${lang}">`);
-    html = html.replace(/<pre><code>/g, () => `<pre><div class="code-header"><span>code</span><button class="copy-code-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div><code>`);
-    return html;
-  }
-  function copyCode(btn) {
-    navigator.clipboard.writeText(btn.closest('pre').querySelector('code').textContent).then(() => {
-      btn.innerHTML = '<i class="fas fa-check"></i> Copied'; btn.style.color = 'var(--success)';
-      setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; btn.style.color = ''; }, 2000);
-    });
-  }
-
-  // ===================== Send =====================
-  async function sendMessage() {
-    const input = document.getElementById('userInput');
-    const text = input.value.trim();
-    if (!text || isGenerating) return;
-    if (!hasApiKey()) { showSetupScreen(); showToast('Please set your API key first', 'warning'); return; }
-    if (!activeConversationId) createNewChat();
-    const chat = getActiveChat(); if (!chat) return;
-
-    document.getElementById('welcomeScreen').style.display = 'none';
-    const userMsg = { role: 'user', content: text, timestamp: Date.now() };
-    chat.messages.push(userMsg);
-    if (chat.messages.filter(m => m.role === 'user').length === 1) {
-      chat.title = text.substring(0, 50) + (text.length > 50 ? '...' : '');
-      document.getElementById('topBarTitle').textContent = chat.title; renderChatList();
-    }
-    const container = document.getElementById('messagesContainer');
-    container.appendChild(createMessageElement(userMsg, chat.messages.length - 1));
-    scrollToBottom(); input.value = ''; input.style.height = 'auto';
-
-    const typingRow = document.createElement('div'); typingRow.className = 'message-row'; typingRow.id = 'typingRow';
-    typingRow.innerHTML = `<div class="message-avatar ai">M</div><div class="message-content"><div class="message-sender">MMJ Assistant</div><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
-    container.appendChild(typingRow); scrollToBottom();
-    isGenerating = true; updateSendButton();
-
-    try {
-      const model = document.getElementById('modelSelector').value;
-      const apiMessages = [{ role: 'system', content: buildSystemPrompt() }, ...chat.messages.filter(m => m.role !== 'error').map(m => ({ role: m.role, content: m.content }))];
-      abortController = new AbortController();
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'MMJ Assistant' },
-        body: JSON.stringify({ model, messages: apiMessages, stream: true, max_tokens: 4096 }),
-        signal: abortController.signal
-      });
-
-      if (!response.ok) {
-        let errMsg = `API error (${response.status})`;
-        try {
-          const errData = await response.json(); errMsg = errData.error?.message || errMsg;
-          if (response.status === 401 || errMsg.toLowerCase().includes('user not found') || errMsg.toLowerCase().includes('invalid') || errMsg.toLowerCase().includes('unauthorized'))
-            errMsg = `Invalid API key or account not found. Update your key in <a href="#" onclick="openSettings();return false;">Settings</a>.`;
-          else if (response.status === 402 || errMsg.toLowerCase().includes('credit') || errMsg.toLowerCase().includes('insufficient'))
-            errMsg = `Insufficient credits. Add credits at <a href="https://openrouter.ai/credits" target="_blank">openrouter.ai/credits</a>.`;
-          else if (response.status === 429) errMsg = 'Rate limit reached. Wait a moment and try again.';
-          else if (response.status >= 500) errMsg = 'OpenRouter server error. Try again shortly.';
-        } catch(e) {}
-        throw new Error(errMsg);
-      }
-
-      typingRow.remove();
-      const aiMsg = { role: 'assistant', content: '', timestamp: Date.now(), taught: false };
-      chat.messages.push(aiMsg);
-      const msgIdx = chat.messages.length - 1;
-      const msgId = 'msg_' + aiMsg.timestamp + '_' + msgIdx;
-      const aiRow = document.createElement('div'); aiRow.className = 'message-row';
-      aiRow.innerHTML = `
-        <div class="message-avatar ai">M</div>
-        <div class="message-content">
-          <div class="message-sender">MMJ Assistant</div>
-          <div class="message-body" id="streamingBody"></div>
-          <div class="message-actions" id="streamingActions" style="display:none;">
-            <button class="msg-action-btn teach-btn" onclick="toggleTeachForm('${msgId}',${msgIdx})" id="teachBtn_${msgId}"><i class="fas fa-graduation-cap"></i> Teach</button>
-            <button class="msg-action-btn" onclick="copyStreamedText()"><i class="fas fa-copy"></i> Copy</button>
-          </div>
-          <div id="teachForm_${msgId}" style="display:none;"></div>
-          <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-        </div>`;
-      container.appendChild(aiRow);
-
-      const streamBody = document.getElementById('streamingBody');
-      let fullText = '';
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n'); buffer = lines.pop() || '';
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed || !trimmed.startsWith('data:')) continue;
-          const data = trimmed.slice(5).trim();
-          if (data === '[DONE]') continue;
-          try {
-            const parsed = JSON.parse(data);
-            const delta = parsed.choices?.[0]?.delta?.content;
-            if (delta) { fullText += delta; aiMsg.content = fullText; streamBody.innerHTML = renderMarkdown(fullText); scrollToBottom(); }
-          } catch(e) {}
-        }
-      }
-
-      streamBody.removeAttribute('id');
-      streamBody.innerHTML = renderMarkdown(fullText);
-      const actions = document.getElementById('streamingActions');
-      if (actions) actions.style.display = 'flex';
-      saveConversations();
-    } catch(err) {
-      const tr = document.getElementById('typingRow'); if (tr) tr.remove();
-      if (err.name === 'AbortError') { showToast('Generation stopped', 'success'); }
-      else {
-        const errorMsg = { role: 'error', content: err.message, timestamp: Date.now() };
-        chat.messages.push(errorMsg);
-        container.appendChild(createMessageElement(errorMsg, chat.messages.length - 1));
-        scrollToBottom(); saveConversations();
-      }
-    } finally {
-      isGenerating = false; abortController = null; updateSendButton(); saveConversations();
-    }
-  }
-
-  let streamedText = '';
-  function copyStreamedText() {
-    const chat = getActiveChat();
-    if (!chat) return;
-    const last = chat.messages.filter(m => m.role === 'assistant').pop();
-    if (last) navigator.clipboard.writeText(last.content).then(() => showToast('Copied to clipboard', 'success'));
-  }
-
-  function useSuggestion(text) { document.getElementById('userInput').value = text; sendMessage(); }
-  function stopGeneration() { if (abortController) abortController.abort(); }
-
-  function updateSendButton() {
-    const btn = document.getElementById('sendBtn');
-    if (isGenerating) { btn.innerHTML = '<i class="fas fa-stop"></i>'; btn.classList.add('loading'); btn.onclick = stopGeneration; }
-    else { btn.innerHTML = '<i class="fas fa-arrow-up"></i>'; btn.classList.remove('loading'); btn.onclick = sendMessage; }
-  }
-
-  function scrollToBottom() { requestAnimationFrame(() => { const c = document.getElementById('messagesContainer'); c.scrollTop = c.scrollHeight; }); }
-
-  function toggleSidebar() {
-    const s = document.getElementById('sidebar'); const o = document.getElementById('sidebarOverlay');
-    s.classList.toggle('collapsed'); o.classList.toggle('active', !s.classList.contains('collapsed'));
-  }
-  function closeSidebarMobile() {
-    if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.add('collapsed'); document.getElementById('sidebarOverlay').classList.remove('active'); }
-  }
-  document.getElementById('sidebarOverlay').addEventListener('click', () => { document.getElementById('sidebar').classList.add('collapsed'); document.getElementById('sidebarOverlay').classList.remove('active'); });
-
-  function showToast(msg, type = 'error') {
-    const c = document.getElementById('toastContainer'); const t = document.createElement('div');
-    t.className = `toast ${type}`; t.textContent = msg; c.appendChild(t); setTimeout(() => t.remove(), 4000);
-  }
-  function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'N') { e.preventDefault(); createNewChat(); }
-    if (e.key === 'Escape') closeSettings();
-  });
-
-  if (window.innerWidth <= 768) document.getElementById('sidebar').classList.add('collapsed');
-  init();
+function copyStreamed(){const c=getAC();if(!c)return;const last=c.msgs.filter(m=>m.role==='assistant').pop();if(last)navigator.clipboard.writeText(last.content).then(()=>toast('Copied','ok'));}
+function useSug(t){document.getElementById('uInput').value=t;sendMsg();}
+function stopGen(){if(abortC)abortC.abort();}
+function updBtn(){const b=document.getElementById('sendBtn');if(generating){b.innerHTML='<i class="fas fa-stop"></i>';b.classList.add('ld');b.onclick=stopGen;}else{b.innerHTML='<i class="fas fa-arrow-up"></i>';b.classList.remove('ld');b.onclick=sendMsg;}}
+function scrollBot(){requestAnimationFrame(()=>{const c=document.getElementById('chatArea');c.scrollTop=c.scrollHeight;});}
+function toast(msg,type='err'){const c=document.getElementById('tc'),t=document.createElement('div');t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();});
+init();
 </script>
 </body>
 </html>
