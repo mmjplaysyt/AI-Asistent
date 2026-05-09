@@ -122,6 +122,15 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .nc-code{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);margin-bottom:6px;word-break:break-all}
 .nc-label{font-size:11px;color:var(--text3);margin-bottom:16px}
 
+.nc-form{max-width:420px;width:100%;text-align:left;margin-bottom:16px}
+.nc-form label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.nc-form input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .12s}
+.nc-form input:focus{border-color:var(--accent2)}
+.nc-form button{margin-top:12px;width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .12s}
+.nc-form button:hover{background:#f0b540}
+.nc-form .nc-hint{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.5}
+.nc-form .nc-hint a{color:var(--accent2);text-decoration:underline;text-underline-offset:2px}
+
 .side-panel{position:fixed;top:0;right:-320px;width:320px;height:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:40;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 30px rgba(0,0,0,.3)}
 .side-panel.open{right:0}
 .side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}
@@ -191,16 +200,39 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
     <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
   </select>
   <button class="topbar-btn" onclick="openPanel()" title="History"><i class="fas fa-clock-rotate-left"></i></button>
+  <button class="topbar-btn" onclick="showSettings()" title="Settings"><i class="fas fa-gear"></i></button>
 </div>
 
 <!-- Not configured screen -->
 <div class="not-configured" id="ncScreen" style="display:none;position:relative;z-index:1;">
   <div class="nc-icon"><i class="fas fa-gear"></i></div>
-  <div class="nc-title">Not Configured Yet</div>
-  <div class="nc-desc">MMJ Assistant hasn't been set up by the administrator. Please contact the admin to configure the API key.</div>
-  <div class="nc-label">Admin: replace the placeholder below in the HTML file with your OpenRouter API key</div>
-  <div class="nc-code">PASTE_YOUR_OPENROUTER_API_KEY_HERE</div>
-  <div class="nc-label" style="margin-top:16px;margin-bottom:0;">Get a key at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent2);text-decoration:underline;">openrouter.ai/keys</a></div>
+  <div class="nc-title">API Key Required</div>
+  <div class="nc-desc">MMJ Assistant needs an OpenRouter API key to function. Enter your key below to get started.</div>
+  <div class="nc-form">
+    <label for="apiKeyInput">OpenRouter API Key</label>
+    <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off">
+    <button onclick="saveApiKey()">Save & Continue</button>
+    <div class="nc-hint">Your API key is stored locally in your browser. Get a key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div id="settingsModal" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;max-width:420px;width:90%;padding:24px;position:relative;">
+    <button onclick="closeSettings()" style="position:absolute;top:12px;right:12px;background:transparent;border:1px solid var(--border);color:var(--text3);width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-xmark"></i>
+    </button>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">Settings</h3>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">OpenRouter API Key</label>
+      <input type="password" id="settingsApiKey" style="width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">Custom API Endpoint (optional)</label>
+      <input type="text" id="settingsApiEndpoint" placeholder="https://openrouter.ai/api/v1/chat/completions" style="width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;">
+    </div>
+    <button onclick="saveSettings()" style="width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Save Settings</button>
+  </div>
 </div>
 
 <div class="chat-area" id="chatArea" style="flex:1;position:relative;z-index:1;">
@@ -228,27 +260,90 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 
 <script>
 // ========================================================
-// ADMIN: Replace this placeholder with your OpenRouter API key
-// Get one at https://openrouter.ai/keys
+// API Configuration - No hardcoded keys
 // ========================================================
-const KEY = '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';
-// ========================================================
+let KEY = '';
+let API = 'https://openrouter.ai/api/v1/chat/completions';
 
-const API = 'https://openrouter.ai/api/v1/chat/completions';
+// Load settings from localStorage
+function loadSettings() {
+  KEY = localStorage.getItem('mmj_api_key') || '';
+  const customEndpoint = localStorage.getItem('mmj_api_endpoint');
+  if (customEndpoint) API = customEndpoint;
+}
+
+// Save API key from initial setup
+function saveApiKey() {
+  const input = document.getElementById('apiKeyInput');
+  const key = input.value.trim();
+  if (!key || !key.startsWith('sk-or-')) {
+    toast('Please enter a valid OpenRouter API key', 'err');
+    return;
+  }
+  KEY = key;
+  localStorage.setItem('mmj_api_key', key);
+  document.getElementById('ncScreen').style.display = 'none';
+  document.getElementById('chatArea').style.display = 'flex';
+  document.getElementById('inputBar').style.display = 'block';
+  toast('API key saved successfully', 'ok');
+  init();
+}
+
+// Show settings modal
+function showSettings() {
+  document.getElementById('settingsApiKey').value = KEY;
+  document.getElementById('settingsApiEndpoint').value = API;
+  document.getElementById('settingsModal').style.display = 'flex';
+}
+
+// Close settings modal
+function closeSettings() {
+  document.getElementById('settingsModal').style.display = 'none';
+}
+
+// Save settings from modal
+function saveSettings() {
+  const key = document.getElementById('settingsApiKey').value.trim();
+  const endpoint = document.getElementById('settingsApiEndpoint').value.trim();
+  
+  if (key && !key.startsWith('sk-or-')) {
+    toast('Please enter a valid OpenRouter API key', 'err');
+    return;
+  }
+  
+  if (key) {
+    KEY = key;
+    localStorage.setItem('mmj_api_key', key);
+  }
+  
+  if (endpoint) {
+    API = endpoint;
+    localStorage.setItem('mmj_api_endpoint', endpoint);
+  } else {
+    API = 'https://openrouter.ai/api/v1/chat/completions';
+    localStorage.removeItem('mmj_api_endpoint');
+  }
+  
+  closeSettings();
+  toast('Settings saved successfully', 'ok');
+}
+
 function getK(){return JSON.parse(localStorage.getItem('mmj_k')||'[]')}
 function saveK(k){localStorage.setItem('mmj_k',JSON.stringify(k))}
 
 let chats=JSON.parse(localStorage.getItem('mmj_c')||'[]');
 let activeId=null,generating=false,abortC=null,openTF=null;
-let isConfigured = KEY && KEY !== 'PASTE_YOUR_OPENROUTER_API_KEY_HERE' && KEY.startsWith('sk-or-');
 
 function init(){
-  if(!isConfigured){
+  loadSettings();
+  
+  if(!KEY){
     document.getElementById('ncScreen').style.display='flex';
     document.getElementById('chatArea').style.display='none';
     document.getElementById('inputBar').style.display='none';
     return;
   }
+  
   if(chats.length)loadChat(chats[0].id);
   renderSPChats();renderSPKnow();updKCount();
   const ta=document.getElementById('uInput');
@@ -348,7 +443,18 @@ function copyC(btn){navigator.clipboard.writeText(btn.closest('pre').querySelect
 
 async function sendMsg(){
   const inp=document.getElementById('uInput'),text=inp.value.trim();
-  if(!text||generating)return;if(!activeId)newChat();
+  if(!text||generating)return;
+  
+  // Check if API key is configured
+  if(!KEY){
+    document.getElementById('ncScreen').style.display='flex';
+    document.getElementById('chatArea').style.display='none';
+    document.getElementById('inputBar').style.display='none';
+    toast('Please configure your API key first', 'warn');
+    return;
+  }
+  
+  if(!activeId)newChat();
   const c=getAC();if(!c)return;
   document.getElementById('welcomeEl').style.display='none';
   const um={role:'user',content:text,ts:Date.now()};c.msgs.push(um);
@@ -364,7 +470,7 @@ async function sendMsg(){
     const apiM=[{role:'system',content:buildSys()},...c.msgs.filter(m=>m.role!=='error').map(m=>({role:m.role,content:m.content}))];
     abortC=new AbortController();
     const res=await fetch(API,{method:'POST',headers:{'Authorization':`Bearer ${KEY}`,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'MMJ Assistant'},body:JSON.stringify({model,messages:apiM,stream:true,max_tokens:4096}),signal:abortC.signal});
-    if(!res.ok){let em=`API error (${res.status})`;try{const e=await res.json();em=e.error?.message||em;if(res.status===401||em.toLowerCase().includes('user not found')||em.toLowerCase().includes('invalid'))em='Invalid API key. Admin needs to update it.';else if(res.status===402||em.toLowerCase().includes('credit'))em='No credits on the API account.';else if(res.status===429)em='Rate limited. Wait and retry.';else if(res.status>=500)em='Server error. Try shortly.';}catch(e){}throw new Error(em);}
+    if(!res.ok){let em=`API error (${res.status})`;try{const e=await res.json();em=e.error?.message||em;if(res.status===401||em.toLowerCase().includes('user not found')||em.toLowerCase().includes('invalid'))em='Invalid API key. Please check your settings.';else if(res.status===402||em.toLowerCase().includes('credit'))em='No credits on the API account.';else if(res.status===429)em='Rate limited. Wait and retry.';else if(res.status>=500)em='Server error. Try shortly.';}catch(e){}throw new Error(em);}
 
     tb.remove();
     const am={role:'assistant',content:'',ts:Date.now(),taught:false};c.msgs.push(am);
@@ -392,7 +498,7 @@ function updBtn(){const b=document.getElementById('sendBtn');if(generating){b.in
 function scrollBot(){requestAnimationFrame(()=>{const c=document.getElementById('chatArea');c.scrollTop=c.scrollHeight;});}
 function toast(msg,type='err'){const c=document.getElementById('tc'),t=document.createElement('div');t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
 function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();closeSettings();});
 init();
 </script>
 </body>
