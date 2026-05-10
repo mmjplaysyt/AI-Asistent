@@ -29,6 +29,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .topbar-spacer{flex:1}
 .topbar-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s}
 .topbar-btn:hover{background:var(--bg3);color:var(--text2);border-color:var(--border2)}
+.topbar-btn.has-key{color:var(--ok)}
 .topbar-model{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:11.5px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%235e5e6a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;padding-right:22px}
 .topbar-model option{background:var(--bg3);color:var(--text)}
 
@@ -113,23 +114,70 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .send-b.ld{animation:sp 1s infinite}
 @keyframes sp{0%,100%{opacity:.45}50%{opacity:1}}
 
-/* Not configured screen */
-.not-configured{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 24px;text-align:center}
-.nc-icon{width:72px;height:72px;border-radius:50%;background:rgba(232,72,85,.08);border:1px solid rgba(232,72,85,.15);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.nc-icon i{font-size:28px;color:var(--err)}
-.nc-title{font-size:20px;font-weight:700;margin-bottom:8px}
-.nc-desc{font-size:14px;color:var(--text3);max-width:420px;line-height:1.6;margin-bottom:24px}
-.nc-code{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);margin-bottom:6px;word-break:break-all}
-.nc-label{font-size:11px;color:var(--text3);margin-bottom:16px}
+/* Admin Setup Screen */
+.admin-setup{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 24px;text-align:center;position:relative;z-index:1}
+.as-icon{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 8px 32px rgba(232,168,50,.25)}
+.as-icon i{font-size:32px;color:#0a0a0b}
+.as-title{font-size:24px;font-weight:700;margin-bottom:8px}
+.as-desc{font-size:14px;color:var(--text3);max-width:440px;line-height:1.6;margin-bottom:32px}
 
-.nc-form{max-width:420px;width:100%;text-align:left;margin-bottom:16px}
-.nc-form label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px}
-.nc-form input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .12s}
-.nc-form input:focus{border-color:var(--accent2)}
-.nc-form button{margin-top:12px;width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .12s}
-.nc-form button:hover{background:#f0b540}
-.nc-form .nc-hint{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.5}
-.nc-form .nc-hint a{color:var(--accent2);text-decoration:underline;text-underline-offset:2px}
+.as-form{max-width:460px;width:100%;text-align:left}
+.as-section{margin-bottom:20px}
+.as-section-title{font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.as-field{margin-bottom:12px}
+.as-field label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.as-field input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .15s}
+.as-field input:focus{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accentDim)}
+.as-field .as-hint{font-size:10.5px;color:var(--text3);margin-top:4px;line-height:1.45}
+.as-field .as-hint a{color:var(--accent2);text-decoration:underline;text-underline-offset:2px}
+
+.as-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+.as-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.as-toggle-label{font-size:12.5px;color:var(--text2)}
+.as-toggle-label small{display:block;font-size:10.5px;color:var(--text3);margin-top:2px}
+.toggle-sw{width:40px;height:22px;border-radius:11px;background:var(--border);position:relative;cursor:pointer;transition:background .15s;border:none;padding:0}
+.toggle-sw.on{background:var(--accent2)}
+.toggle-sw::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;transition:transform .15s}
+.toggle-sw.on::after{transform:translateX(18px)}
+
+.as-actions{display:flex;gap:8px;margin-top:24px}
+.as-btn{flex:1;padding:11px 16px;border-radius:9px;border:none;font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:7px}
+.as-btn-primary{background:var(--accent2);color:#0a0a0b}.as-btn-primary:hover{background:#f0b540;transform:translateY(-1px)}
+.as-btn-secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}.as-btn-secondary:hover{background:var(--bg4);border-color:var(--border2)}
+
+.as-status{margin-top:16px;padding:8px 12px;border-radius:7px;font-size:11.5px;display:none;align-items:center;gap:6px}
+.as-status.show{display:flex}
+.as-status.ok{background:rgba(61,214,140,.08);border:1px solid rgba(61,214,140,.2);color:var(--ok)}
+.as-status.err{background:rgba(232,72,85,.08);border:1px solid rgba(232,72,85,.2);color:var(--err)}
+
+/* Admin Panel Modal */
+.admin-modal{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.65);align-items:center;justify-content:center;animation:fadeIn .15s ease}
+.admin-modal.open{display:flex}
+.admin-modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;max-width:520px;width:92%;max-height:85vh;overflow-y:auto;position:relative}
+.admin-modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:2;border-radius:14px 14px 0 0}
+.admin-modal-head h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.admin-modal-head h3 i{color:var(--accent2)}
+.admin-close{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .12s}
+.admin-close:hover{background:var(--bg3);color:var(--text2)}
+.admin-modal-body{padding:20px}
+
+.admin-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px}
+.admin-stat{padding:12px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);text-align:center}
+.admin-stat-val{font-size:20px;font-weight:700;color:var(--accent2)}
+.admin-stat-label{font-size:10.5px;color:var(--text3);margin-top:2px}
+
+.admin-pw-section{padding:14px;border-radius:9px;border:1px solid var(--border);background:var(--bg3);margin-bottom:16px}
+.admin-pw-section label{display:block;font-size:11.5px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.admin-pw-row{display:flex;gap:6px}
+.admin-pw-row input{flex:1;padding:8px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none}
+.admin-pw-row input:focus{border-color:var(--accent2)}
+.admin-pw-row button{padding:8px 12px;border-radius:7px;border:none;background:var(--accent2);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .12s}
+.admin-pw-row button:hover{background:#f0b540}
+
+.admin-danger{padding:14px;border-radius:9px;border:1px solid rgba(232,72,85,.2);background:rgba(232,72,85,.04);margin-top:16px}
+.admin-danger h4{font-size:12px;font-weight:700;color:var(--err);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.admin-danger-btn{width:100%;padding:9px;border-radius:7px;border:1px solid rgba(232,72,85,.25);background:transparent;color:var(--err);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px}
+.admin-danger-btn:hover{background:rgba(232,72,85,.08)}
 
 .side-panel{position:fixed;top:0;right:-320px;width:320px;height:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:40;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 30px rgba(0,0,0,.3)}
 .side-panel.open{right:0}
@@ -165,8 +213,13 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 @keyframes ti{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes to{to{opacity:0;transform:translateX(20px)}}
 
+.key-badge{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:6px}
+.key-badge.set{background:rgba(61,214,140,.1);color:var(--ok);border:1px solid rgba(61,214,140,.2)}
+.key-badge.unset{background:rgba(232,72,85,.1);color:var(--err);border:1px solid rgba(232,72,85,.2)}
+
 @media(max-width:768px){
   .chat-inner{padding:0 14px}.input-bar{padding:8px 14px 12px}.sug-grid{grid-template-columns:1fr}.topbar-model{display:none}
+  .admin-stat-grid{grid-template-columns:1fr}.admin-modal-box{width:96%}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -175,6 +228,75 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 <div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 500px 350px at 50% 0%,rgba(232,168,50,.03) 0%,transparent 70%)"></div>
 <div class="toast-c" id="tc"></div>
 <div class="side-overlay" id="sOverlay" onclick="closePanel()"></div>
+
+<!-- Admin Panel Modal -->
+<div class="admin-modal" id="adminModal">
+  <div class="admin-modal-box">
+    <div class="admin-modal-head">
+      <h3><i class="fas fa-shield-halved"></i> Admin Panel</h3>
+      <button class="admin-close" onclick="closeAdmin()"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="admin-modal-body">
+      <div id="adminLogin">
+        <p style="font-size:13px;color:var(--text3);margin-bottom:14px;text-align:center;">Enter the admin password to continue.</p>
+        <div style="display:flex;gap:6px;">
+          <input type="password" id="adminPwInput" placeholder="Admin password" style="flex:1;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;" onkeydown="if(event.key==='Enter')checkAdminPw()">
+          <button onclick="checkAdminPw()" style="padding:10px 16px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Unlock</button>
+        </div>
+        <div class="as-status" id="adminLoginStatus"></div>
+      </div>
+      <div id="adminContent" style="display:none;">
+        <div class="admin-stat-grid">
+          <div class="admin-stat"><div class="admin-stat-val" id="statChats">0</div><div class="admin-stat-label">Conversations</div></div>
+          <div class="admin-stat"><div class="admin-stat-val" id="statMsgs">0</div><div class="admin-stat-label">Messages</div></div>
+          <div class="admin-stat"><div class="admin-stat-val" id="statMem">0</div><div class="admin-stat-label">Memories</div></div>
+        </div>
+
+        <div class="as-section">
+          <div class="as-section-title"><i class="fas fa-key"></i> Default API Key</div>
+          <div class="as-field">
+            <label>OpenRouter API Key</label>
+            <input type="password" id="modalApiKey" placeholder="sk-or-v1-...">
+            <div class="as-hint">This key will be used as the default for all users. Individual users can override with their own key.</div>
+          </div>
+          <button class="as-btn as-btn-primary" style="width:100%;" onclick="saveAdminKey()"><i class="fas fa-save"></i> Save Default Key</button>
+          <div class="as-status" id="keySaveStatus"></div>
+        </div>
+
+        <hr class="as-divider">
+
+        <div class="as-section">
+          <div class="as-section-title"><i class="fas fa-server"></i> API Endpoint</div>
+          <div class="as-field">
+            <label>Custom Endpoint (optional)</label>
+            <input type="text" id="modalEndpoint" placeholder="https://openrouter.ai/api/v1/chat/completions" style="font-size:11.5px;">
+          </div>
+          <button class="as-btn as-btn-secondary" style="width:100%;" onclick="saveAdminEndpoint()"><i class="fas fa-link"></i> Save Endpoint</button>
+        </div>
+
+        <hr class="as-divider">
+
+        <div class="as-section">
+          <div class="as-section-title"><i class="fas fa-lock"></i> Admin Password</div>
+          <div class="admin-pw-section">
+            <label>Change admin password</label>
+            <div class="admin-pw-row">
+              <input type="password" id="newPwInput" placeholder="New password">
+              <button onclick="changeAdminPw()">Update</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-danger">
+          <h4><i class="fas fa-triangle-exclamation"></i> Danger Zone</h4>
+          <button class="admin-danger-btn" onclick="clearAllChats()"><i class="fas fa-trash-can"></i> Clear All Conversations</button>
+          <button class="admin-danger-btn" style="margin-top:6px;" onclick="clearAllMemory()"><i class="fas fa-brain"></i> Clear All Memories</button>
+          <button class="admin-danger-btn" style="margin-top:6px;" onclick="resetEverything()"><i class="fas fa-rotate-left"></i> Reset Everything</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="side-panel" id="sPanel">
   <div class="sp-head"><h3>History & Memory</h3><button class="sp-close" onclick="closePanel()"><i class="fas fa-xmark"></i></button></div>
@@ -190,6 +312,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 <div class="topbar" style="position:relative;z-index:1;">
   <div class="topbar-logo">M</div>
   <span class="topbar-name">MMJ Assistant</span>
+  <span class="key-badge unset" id="keyBadge">NO KEY</span>
   <div class="topbar-spacer"></div>
   <select class="topbar-model" id="modelSel">
     <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
@@ -200,38 +323,44 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
     <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B</option>
   </select>
   <button class="topbar-btn" onclick="openPanel()" title="History"><i class="fas fa-clock-rotate-left"></i></button>
-  <button class="topbar-btn" onclick="showSettings()" title="Settings"><i class="fas fa-gear"></i></button>
+  <button class="topbar-btn" id="adminBtn" onclick="openAdmin()" title="Admin Panel"><i class="fas fa-shield-halved"></i></button>
 </div>
 
-<!-- Not configured screen -->
-<div class="not-configured" id="ncScreen" style="display:none;position:relative;z-index:1;">
-  <div class="nc-icon"><i class="fas fa-gear"></i></div>
-  <div class="nc-title">API Key Required</div>
-  <div class="nc-desc">MMJ Assistant needs an OpenRouter API key to function. Enter your key below to get started.</div>
-  <div class="nc-form">
-    <label for="apiKeyInput">OpenRouter API Key</label>
-    <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off">
-    <button onclick="saveApiKey()">Save & Continue</button>
-    <div class="nc-hint">Your API key is stored locally in your browser. Get a key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></div>
-  </div>
-</div>
-
-<!-- Settings modal -->
-<div id="settingsModal" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;">
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;max-width:420px;width:90%;padding:24px;position:relative;">
-    <button onclick="closeSettings()" style="position:absolute;top:12px;right:12px;background:transparent;border:1px solid var(--border);color:var(--text3);width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-      <i class="fas fa-xmark"></i>
-    </button>
-    <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">Settings</h3>
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">OpenRouter API Key</label>
-      <input type="password" id="settingsApiKey" style="width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;">
+<!-- Admin Setup Screen -->
+<div class="admin-setup" id="setupScreen" style="display:none;">
+  <div class="as-icon"><i class="fas fa-shield-halved"></i></div>
+  <div class="as-title">Initial Setup</div>
+  <div class="as-desc">Welcome to MMJ Assistant. Configure the default API key and set an admin password to get started.</div>
+  <div class="as-form">
+    <div class="as-section">
+      <div class="as-section-title"><i class="fas fa-key"></i> Default API Key</div>
+      <div class="as-field">
+        <label>OpenRouter API Key</label>
+        <input type="password" id="setupApiKey" placeholder="sk-or-v1-...">
+        <div class="as-hint">Get your key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></div>
+      </div>
+      <div class="as-field">
+        <label>Custom API Endpoint (optional)</label>
+        <input type="text" id="setupEndpoint" placeholder="https://openrouter.ai/api/v1/chat/completions">
+      </div>
     </div>
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">Custom API Endpoint (optional)</label>
-      <input type="text" id="settingsApiEndpoint" placeholder="https://openrouter.ai/api/v1/chat/completions" style="width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;">
+    <hr class="as-divider">
+    <div class="as-section">
+      <div class="as-section-title"><i class="fas fa-lock"></i> Admin Password</div>
+      <div class="as-field">
+        <label>Create Admin Password</label>
+        <input type="password" id="setupPw" placeholder="Minimum 4 characters">
+        <div class="as-hint">Required to access the admin panel later. Don't forget this password.</div>
+      </div>
+      <div class="as-field">
+        <label>Confirm Password</label>
+        <input type="password" id="setupPwConfirm" placeholder="Re-enter password">
+      </div>
     </div>
-    <button onclick="saveSettings()" style="width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Save Settings</button>
+    <div class="as-actions">
+      <button class="as-btn as-btn-primary" onclick="completeSetup()"><i class="fas fa-rocket"></i> Complete Setup</button>
+    </div>
+    <div class="as-status" id="setupStatus"></div>
   </div>
 </div>
 
@@ -260,74 +389,210 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 
 <script>
 // ========================================================
-// API Configuration - No hardcoded keys
+// Configuration - stored in localStorage as admin settings
 // ========================================================
+const DEFAULT_API = 'https://openrouter.ai/api/v1/chat/completions';
+const DEFAULT_PW = 'admin123';
 let KEY = '';
-let API = 'https://openrouter.ai/api/v1/chat/completions';
+let API = DEFAULT_API;
+let isAdminUnlocked = false;
 
-// Load settings from localStorage
-function loadSettings() {
-  KEY = localStorage.getItem('mmj_api_key') || '';
-  const customEndpoint = localStorage.getItem('mmj_api_endpoint');
-  if (customEndpoint) API = customEndpoint;
+function getAdminSettings() {
+  try {
+    return JSON.parse(localStorage.getItem('mmj_admin') || '{}');
+  } catch(e) { return {}; }
 }
 
-// Save API key from initial setup
-function saveApiKey() {
-  const input = document.getElementById('apiKeyInput');
-  const key = input.value.trim();
-  if (!key || !key.startsWith('sk-or-')) {
-    toast('Please enter a valid OpenRouter API key', 'err');
-    return;
-  }
-  KEY = key;
-  localStorage.setItem('mmj_api_key', key);
-  document.getElementById('ncScreen').style.display = 'none';
-  document.getElementById('chatArea').style.display = 'flex';
-  document.getElementById('inputBar').style.display = 'block';
-  toast('API key saved successfully', 'ok');
-  init();
+function saveAdminSettings(settings) {
+  localStorage.setItem('mmj_admin', JSON.stringify(settings));
 }
 
-// Show settings modal
-function showSettings() {
-  document.getElementById('settingsApiKey').value = KEY;
-  document.getElementById('settingsApiEndpoint').value = API;
-  document.getElementById('settingsModal').style.display = 'flex';
+function loadConfig() {
+  const s = getAdminSettings();
+  KEY = s.apiKey || '';
+  API = s.endpoint || DEFAULT_API;
+  updateKeyBadge();
 }
 
-// Close settings modal
-function closeSettings() {
-  document.getElementById('settingsModal').style.display = 'none';
-}
-
-// Save settings from modal
-function saveSettings() {
-  const key = document.getElementById('settingsApiKey').value.trim();
-  const endpoint = document.getElementById('settingsApiEndpoint').value.trim();
-  
-  if (key && !key.startsWith('sk-or-')) {
-    toast('Please enter a valid OpenRouter API key', 'err');
-    return;
-  }
-  
-  if (key) {
-    KEY = key;
-    localStorage.setItem('mmj_api_key', key);
-  }
-  
-  if (endpoint) {
-    API = endpoint;
-    localStorage.setItem('mmj_api_endpoint', endpoint);
+function updateKeyBadge() {
+  const badge = document.getElementById('keyBadge');
+  if (KEY) {
+    badge.textContent = 'KEY SET';
+    badge.className = 'key-badge set';
+    document.getElementById('adminBtn').classList.add('has-key');
   } else {
-    API = 'https://openrouter.ai/api/v1/chat/completions';
-    localStorage.removeItem('mmj_api_endpoint');
+    badge.textContent = 'NO KEY';
+    badge.className = 'key-badge unset';
+    document.getElementById('adminBtn').classList.remove('has-key');
   }
-  
-  closeSettings();
-  toast('Settings saved successfully', 'ok');
 }
 
+function isSetup() {
+  const s = getAdminSettings();
+  return !!(s.apiKey && s.password);
+}
+
+// Setup flow
+function completeSetup() {
+  const apiKey = document.getElementById('setupApiKey').value.trim();
+  const endpoint = document.getElementById('setupEndpoint').value.trim();
+  const pw = document.getElementById('setupPw').value;
+  const pwConfirm = document.getElementById('setupPwConfirm').value;
+  const status = document.getElementById('setupStatus');
+
+  if (!apiKey || !apiKey.startsWith('sk-or-')) {
+    showStatus(status, 'Please enter a valid OpenRouter API key', 'err');
+    return;
+  }
+  if (!pw || pw.length < 4) {
+    showStatus(status, 'Password must be at least 4 characters', 'err');
+    return;
+  }
+  if (pw !== pwConfirm) {
+    showStatus(status, 'Passwords do not match', 'err');
+    return;
+  }
+
+  saveAdminSettings({
+    apiKey: apiKey,
+    endpoint: endpoint || DEFAULT_API,
+    password: pw,
+    setupAt: Date.now()
+  });
+
+  loadConfig();
+  showStatus(status, 'Setup complete! Loading...', 'ok');
+  
+  setTimeout(() => {
+    document.getElementById('setupScreen').style.display = 'none';
+    document.getElementById('chatArea').style.display = 'flex';
+    document.getElementById('inputBar').style.display = 'block';
+    initChat();
+    toast('Setup complete!', 'ok');
+  }, 800);
+}
+
+function showStatus(el, msg, type) {
+  el.textContent = msg;
+  el.className = `as-status show ${type}`;
+  setTimeout(() => { el.className = 'as-status'; }, 4000);
+}
+
+// Admin panel
+function openAdmin() {
+  const s = getAdminSettings();
+  document.getElementById('adminModal').classList.add('open');
+  
+  if (!s.password) {
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    isAdminUnlocked = true;
+  } else {
+    document.getElementById('adminLogin').style.display = 'block';
+    document.getElementById('adminContent').style.display = 'none';
+    isAdminUnlocked = false;
+    document.getElementById('adminPwInput').value = '';
+    document.getElementById('adminLoginStatus').className = 'as-status';
+  }
+}
+
+function closeAdmin() {
+  document.getElementById('adminModal').classList.remove('open');
+  isAdminUnlocked = false;
+}
+
+function checkAdminPw() {
+  const s = getAdminSettings();
+  const input = document.getElementById('adminPwInput').value;
+  const status = document.getElementById('adminLoginStatus');
+  
+  if (input === s.password) {
+    isAdminUnlocked = true;
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    refreshAdminStats();
+    document.getElementById('modalApiKey').value = s.apiKey || '';
+    document.getElementById('modalEndpoint').value = s.endpoint || '';
+  } else {
+    showStatus(status, 'Incorrect password', 'err');
+  }
+}
+
+function refreshAdminStats() {
+  document.getElementById('statChats').textContent = chats.length;
+  document.getElementById('statMsgs').textContent = chats.reduce((a, c) => a + c.msgs.length, 0);
+  document.getElementById('statMem').textContent = getK().length;
+}
+
+function saveAdminKey() {
+  const key = document.getElementById('modalApiKey').value.trim();
+  const status = document.getElementById('keySaveStatus');
+  
+  if (!key || !key.startsWith('sk-or-')) {
+    showStatus(status, 'Please enter a valid OpenRouter API key', 'err');
+    return;
+  }
+  
+  const s = getAdminSettings();
+  s.apiKey = key;
+  saveAdminSettings(s);
+  loadConfig();
+  showStatus(status, 'Default API key saved successfully', 'ok');
+  toast('Default API key updated', 'ok');
+}
+
+function saveAdminEndpoint() {
+  const endpoint = document.getElementById('modalEndpoint').value.trim();
+  const s = getAdminSettings();
+  s.endpoint = endpoint || DEFAULT_API;
+  saveAdminSettings(s);
+  loadConfig();
+  toast('API endpoint updated', 'ok');
+}
+
+function changeAdminPw() {
+  const newPw = document.getElementById('newPwInput').value;
+  if (!newPw || newPw.length < 4) {
+    toast('Password must be at least 4 characters', 'warn');
+    return;
+  }
+  const s = getAdminSettings();
+  s.password = newPw;
+  saveAdminSettings(s);
+  document.getElementById('newPwInput').value = '';
+  toast('Admin password updated', 'ok');
+}
+
+function clearAllChats() {
+  if (!confirm('Delete all conversations? This cannot be undone.')) return;
+  chats = [];
+  saveC();
+  activeId = null;
+  showWelcome();
+  document.querySelector('.topbar-name').textContent = 'MMJ Assistant';
+  renderSPChats();
+  refreshAdminStats();
+  toast('All conversations cleared', 'ok');
+}
+
+function clearAllMemory() {
+  if (!confirm('Delete all taught memories? This cannot be undone.')) return;
+  saveK([]);
+  renderSPKnow();
+  updKCount();
+  refreshAdminStats();
+  toast('All memories cleared', 'ok');
+}
+
+function resetEverything() {
+  if (!confirm('This will delete ALL data including API key, conversations, and memories. Continue?')) return;
+  localStorage.removeItem('mmj_admin');
+  localStorage.removeItem('mmj_c');
+  localStorage.removeItem('mmj_k');
+  location.reload();
+}
+
+// Knowledge / Memory functions
 function getK(){return JSON.parse(localStorage.getItem('mmj_k')||'[]')}
 function saveK(k){localStorage.setItem('mmj_k',JSON.stringify(k))}
 
@@ -335,15 +600,21 @@ let chats=JSON.parse(localStorage.getItem('mmj_c')||'[]');
 let activeId=null,generating=false,abortC=null,openTF=null;
 
 function init(){
-  loadSettings();
+  loadConfig();
   
-  if(!KEY){
-    document.getElementById('ncScreen').style.display='flex';
+  if(!isSetup()){
+    document.getElementById('setupScreen').style.display='flex';
     document.getElementById('chatArea').style.display='none';
     document.getElementById('inputBar').style.display='none';
     return;
   }
   
+  document.getElementById('chatArea').style.display='flex';
+  document.getElementById('inputBar').style.display='block';
+  initChat();
+}
+
+function initChat(){
   if(chats.length)loadChat(chats[0].id);
   renderSPChats();renderSPKnow();updKCount();
   const ta=document.getElementById('uInput');
@@ -393,7 +664,7 @@ function showWelcome(){document.getElementById('welcomeEl').style.display='flex'
 function renderMsgs(msgs){
   const inner=document.getElementById('chatInner'),w=document.getElementById('welcomeEl');inner.querySelectorAll('.msg-block').forEach(e=>e.remove());
   if(!msgs.length){w.style.display='flex';return;}w.style.display='none';
-  msgs.forEach((m,i)=>{const b=mkBlock(m,i);b.style.animationDelay=(i*0.025)+'s';inner.appendChild(b);});scrollBot();
+  msgs.forEach((m,i)=>{const b=mkBlock(m,i);inner.appendChild(b);});scrollBot();
 }
 
 function mkBlock(msg,idx){
@@ -445,12 +716,8 @@ async function sendMsg(){
   const inp=document.getElementById('uInput'),text=inp.value.trim();
   if(!text||generating)return;
   
-  // Check if API key is configured
   if(!KEY){
-    document.getElementById('ncScreen').style.display='flex';
-    document.getElementById('chatArea').style.display='none';
-    document.getElementById('inputBar').style.display='none';
-    toast('Please configure your API key first', 'warn');
+    toast('No API key configured. Contact admin.','warn');
     return;
   }
   
@@ -470,7 +737,7 @@ async function sendMsg(){
     const apiM=[{role:'system',content:buildSys()},...c.msgs.filter(m=>m.role!=='error').map(m=>({role:m.role,content:m.content}))];
     abortC=new AbortController();
     const res=await fetch(API,{method:'POST',headers:{'Authorization':`Bearer ${KEY}`,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'MMJ Assistant'},body:JSON.stringify({model,messages:apiM,stream:true,max_tokens:4096}),signal:abortC.signal});
-    if(!res.ok){let em=`API error (${res.status})`;try{const e=await res.json();em=e.error?.message||em;if(res.status===401||em.toLowerCase().includes('user not found')||em.toLowerCase().includes('invalid'))em='Invalid API key. Please check your settings.';else if(res.status===402||em.toLowerCase().includes('credit'))em='No credits on the API account.';else if(res.status===429)em='Rate limited. Wait and retry.';else if(res.status>=500)em='Server error. Try shortly.';}catch(e){}throw new Error(em);}
+    if(!res.ok){let em=`API error (${res.status})`;try{const e=await res.json();em=e.error?.message||em;if(res.status===401||em.toLowerCase().includes('user not found')||em.toLowerCase().includes('invalid'))em='Invalid API key. Admin needs to update it in the Admin Panel.';else if(res.status===402||em.toLowerCase().includes('credit'))em='No credits on the API account.';else if(res.status===429)em='Rate limited. Wait and retry.';else if(res.status>=500)em='Server error. Try shortly.';}catch(e){}throw new Error(em);}
 
     tb.remove();
     const am={role:'assistant',content:'',ts:Date.now(),taught:false};c.msgs.push(am);
@@ -498,7 +765,7 @@ function updBtn(){const b=document.getElementById('sendBtn');if(generating){b.in
 function scrollBot(){requestAnimationFrame(()=>{const c=document.getElementById('chatArea');c.scrollTop=c.scrollHeight;});}
 function toast(msg,type='err'){const c=document.getElementById('tc'),t=document.createElement('div');t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
 function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();closeSettings();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePanel();closeAdmin();}});
 init();
 </script>
 </body>
