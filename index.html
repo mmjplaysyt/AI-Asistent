@@ -17,6 +17,8 @@
   --text:#e4e4e9;--text2:#9494a0;--text3:#5e5e6a;
   --accent:#d4922a;--accent2:#e8a832;--accentDim:rgba(232,168,50,.1);
   --teach:#a78bfa;--teachDim:rgba(167,139,250,.08);--teachBorder:rgba(167,139,250,.2);
+  --think:#38bdf8;--thinkDim:rgba(56,189,248,.08);--thinkBorder:rgba(56,189,248,.2);
+  --search:#34d399;--searchDim:rgba(52,211,153,.08);--searchBorder:rgba(52,211,153,.2);
   --err:#e84855;--ok:#3dd68c;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -29,6 +31,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .topbar-spacer{flex:1}
 .topbar-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s}
 .topbar-btn:hover{background:var(--bg3);color:var(--text2);border-color:var(--border2)}
+.topbar-btn.active-think{background:var(--thinkDim);color:var(--think);border-color:var(--thinkBorder)}
 .topbar-model{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:11.5px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%235e5e6a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;padding-right:22px}
 .topbar-model option{background:var(--bg3);color:var(--text)}
 
@@ -43,6 +46,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .msg-name.ai-n{color:var(--accent2)}
 .msg-time{font-size:11px;color:var(--text3);margin-left:auto}
 .msg-taught{font-size:9px;padding:1px 6px;border-radius:8px;background:var(--teachDim);border:1px solid var(--teachBorder);color:var(--teach);font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.msg-sourced{font-size:9px;padding:1px 6px;border-radius:8px;background:var(--searchDim);border:1px solid var(--searchBorder);color:var(--search);font-weight:600;display:inline-flex;align-items:center;gap:3px}
 .msg-body{font-size:14.5px;line-height:1.72;color:var(--text)}
 .msg-body p{margin-bottom:10px}.msg-body p:last-child{margin-bottom:0}
 .msg-body ul,.msg-body ol{margin:8px 0;padding-left:22px}.msg-body li{margin-bottom:3px}
@@ -68,6 +72,31 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .m-act:hover{background:var(--bg3);color:var(--text2)}
 .m-act.t-act:hover{background:var(--teachDim);color:var(--teach)}
 .m-act.t-act.on{color:var(--teach);opacity:1}
+
+/* Thinking Section */
+.think-section{margin-bottom:10px;border:1px solid var(--thinkBorder);border-radius:9px;overflow:hidden;background:var(--thinkDim)}
+.think-hdr{padding:8px 12px;background:rgba(56,189,248,.05);border-bottom:1px solid var(--thinkBorder);font-size:11.5px;font-weight:600;color:var(--think);display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;transition:background .12s}
+.think-hdr:hover{background:rgba(56,189,248,.1)}
+.think-hdr i.chevron{margin-left:auto;transition:transform .2s;font-size:9px}
+.think-hdr.collapsed i.chevron{transform:rotate(-90deg)}
+.think-body{padding:10px 12px;font-size:12.5px;line-height:1.6;color:var(--text2);max-height:300px;overflow-y:auto;display:block}
+.think-body.collapsed{display:none}
+.think-body p{margin-bottom:6px}.think-body p:last-child{margin-bottom:0}
+
+/* Search Results Section */
+.search-section{margin-bottom:10px;border:1px solid var(--searchBorder);border-radius:9px;overflow:hidden;background:var(--searchDim)}
+.search-hdr{padding:8px 12px;background:rgba(52,211,153,.05);border-bottom:1px solid var(--searchBorder);font-size:11.5px;font-weight:600;color:var(--search);display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;transition:background .12s}
+.search-hdr:hover{background:rgba(52,211,153,.1)}
+.search-hdr i.chevron{margin-left:auto;transition:transform .2s;font-size:9px}
+.search-hdr.collapsed i.chevron{transform:rotate(-90deg)}
+.search-body{padding:10px 12px;max-height:250px;overflow-y:auto;display:block}
+.search-body.collapsed{display:none}
+.search-result{padding:8px 10px;border-radius:6px;margin-bottom:6px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);transition:all .12s}
+.search-result:hover{background:rgba(255,255,255,.04);border-color:var(--searchBorder)}
+.search-result:last-child{margin-bottom:0}
+.search-result-title{font-size:12px;font-weight:600;color:var(--search);margin-bottom:2px;line-height:1.4}
+.search-result-url{font-size:10px;color:var(--text3);margin-bottom:4px;word-break:break-all}
+.search-result-snippet{font-size:11px;color:var(--text2);line-height:1.5}
 
 .err-bub{background:rgba(232,72,85,.07);border:1px solid rgba(232,72,85,.18);border-radius:9px;padding:11px 14px;font-size:13px;color:#f08090;line-height:1.55}
 .err-bub i{margin-right:5px;color:var(--err)}.err-bub a{color:var(--accent2);text-decoration:underline;text-underline-offset:2px}
@@ -107,6 +136,10 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .input-wrap:focus-within{border-color:var(--border2);box-shadow:0 0 0 2px rgba(255,255,255,.02)}
 .input-wrap textarea{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:140px;padding:3px 0}
 .input-wrap textarea::placeholder{color:var(--text3)}
+.input-opts{display:flex;align-items:center;gap:4px;margin-bottom:2px}
+.input-opt{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .12s}
+.input-opt:hover{background:var(--bg3);color:var(--text2)}
+.input-opt.active-search{background:var(--searchDim);color:var(--search);border-color:var(--searchBorder)}
 .send-b{width:32px;height:32px;border-radius:8px;border:none;background:var(--accent2);color:#0a0a0b;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
 .send-b:hover{background:#f0b540;transform:scale(1.04)}
 .send-b:disabled{opacity:.25;cursor:not-allowed;transform:none}
@@ -170,7 +203,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 
 .toast-c{position:fixed;top:14px;right:14px;z-index:100;display:flex;flex-direction:column;gap:5px}
 .toast{padding:9px 14px;border-radius:7px;font-size:12px;font-family:'Space Grotesk',sans-serif;max-width:340px;animation:ti .2s ease,to .2s ease 3.3s forwards;box-shadow:0 4px 20px rgba(0,0,0,.4);line-height:1.4}
-.toast.err{background:var(--err);color:white}.toast.ok{background:var(--ok);color:#0a0a0b}.toast.warn{background:#f59e0b;color:#0a0a0b}.toast.tt{background:var(--teach);color:#0a0a0b}
+.toast.err{background:var(--err);color:white}.toast.ok{background:var(--ok);color:#0a0a0b}.toast.warn{background:#f59e0b;color:#0a0a0b}.toast.tt{background:var(--teach);color:#0a0a0b}.toast.info{background:var(--think);color:#0a0a0b}
 @keyframes ti{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes to{to{opacity:0;transform:translateX(20px)}}
 
@@ -225,6 +258,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
   <div class="topbar-logo">M</div>
   <span class="topbar-name">MMJ Assistant</span>
   <div class="topbar-spacer"></div>
+  <button class="topbar-btn" id="thinkBtn" onclick="toggleThink()" title="Thinking Mode"><i class="fas fa-brain"></i></button>
   <select class="topbar-model" id="modelSel">
     <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
     <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash</option>
@@ -243,12 +277,12 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
     <div class="welcome" id="welcomeEl">
       <div class="welcome-logo">M</div>
       <h2>What can I help with?</h2>
-      <p>Ask me anything — code, writing, analysis, math, or just chat. Click <strong>Teach</strong> on any response to correct me permanently.</p>
+      <p>Ask me anything — code, writing, analysis, math, or just chat. Use <strong>Thinking</strong> mode to see my reasoning, or <strong>Web Search</strong> for real-time info.</p>
       <div class="sug-grid">
         <div class="sug-card" onclick="useSug('Explain quantum computing in simple terms')"><i class="fas fa-atom"></i><span>Explain quantum computing simply</span></div>
+        <div class="sug-card" onclick="useSug('What are the latest news about AI in 2024?')"><i class="fas fa-globe"></i><span>Latest AI news (use web search)</span></div>
         <div class="sug-card" onclick="useSug('Write a Python function to find the longest palindromic substring')"><i class="fas fa-code"></i><span>Python palindromic substring</span></div>
         <div class="sug-card" onclick="useSug('Compare REST vs GraphQL APIs with pros and cons')"><i class="fas fa-diagram-project"></i><span>REST vs GraphQL comparison</span></div>
-        <div class="sug-card" onclick="useSug('Design a database schema for an e-commerce platform')"><i class="fas fa-database"></i><span>E-commerce DB schema</span></div>
       </div>
     </div>
   </div>
@@ -256,6 +290,9 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 
 <div class="input-bar" id="inputBar" style="position:relative;z-index:1;">
   <div class="input-wrap">
+    <div class="input-opts">
+      <button class="input-opt" id="searchBtn" onclick="toggleSearch()" title="Web Search"><i class="fas fa-globe"></i></button>
+    </div>
     <textarea id="uInput" rows="1" placeholder="Ask MMJ Assistant anything..." aria-label="Message"></textarea>
     <button class="send-b" id="sendBtn" onclick="sendMsg()"><i class="fas fa-arrow-up"></i></button>
   </div>
@@ -273,6 +310,8 @@ const API = 'https://openrouter.ai/api/v1/chat/completions';
 let KEY = DEFAULT_KEY;
 let adminClicks = 0;
 let adminTimeout = null;
+let thinkMode = false;
+let searchMode = false;
 
 // If admin saved a key in localStorage previously, use that instead
 (function loadAdminKey() {
@@ -294,6 +333,74 @@ function init(){
   const ta=document.getElementById('uInput');
   ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';});
   ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+}
+
+// Thinking mode toggle
+function toggleThink(){
+  thinkMode = !thinkMode;
+  const btn = document.getElementById('thinkBtn');
+  btn.classList.toggle('active-think', thinkMode);
+  toast(thinkMode ? 'Thinking mode enabled' : 'Thinking mode disabled', 'info');
+}
+
+// Web search toggle
+function toggleSearch(){
+  searchMode = !searchMode;
+  const btn = document.getElementById('searchBtn');
+  btn.classList.toggle('active-search', searchMode);
+  toast(searchMode ? 'Web search enabled' : 'Web search disabled', 'info');
+}
+
+// Web search function using DuckDuckGo
+async function webSearch(query){
+  try {
+    // Using DuckDuckGo instant answer API as a simple free search
+    const response = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`);
+    const data = await response.json();
+    
+    let results = [];
+    
+    // Add abstract if available
+    if(data.Abstract) {
+      results.push({
+        title: data.Heading || query,
+        url: data.AbstractURL || '',
+        snippet: data.Abstract
+      });
+    }
+    
+    // Add related topics
+    if(data.RelatedTopics && Array.isArray(data.RelatedTopics)) {
+      data.RelatedTopics.forEach(topic => {
+        if(topic.Text && topic.FirstURL) {
+          results.push({
+            title: topic.Text.substring(0, 100),
+            url: topic.FirstURL,
+            snippet: topic.Text
+          });
+        }
+      });
+    }
+    
+    // If no results from DuckDuckGo, try a simple approach
+    if(results.length === 0) {
+      // Fallback: Create a generic response indicating search was performed
+      results.push({
+        title: 'Search Results',
+        url: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
+        snippet: `Web search was performed for "${query}". For the most current and detailed results, please visit the search link.`
+      });
+    }
+    
+    return results.slice(0, 5); // Limit to 5 results
+  } catch(error) {
+    console.error('Search error:', error);
+    return [{
+      title: 'Search Error',
+      url: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
+      snippet: 'Unable to fetch search results. You can try the search link directly.'
+    }];
+  }
 }
 
 // Hidden admin access: triple-click the gear icon
@@ -383,6 +490,11 @@ function addKnow(topic,answer,ctx){
 function buildSys(){
   const k=getK();let p='You are MMJ Assistant, a highly capable, professional, and helpful AI assistant. Provide clear, well-structured, accurate responses. Use markdown for code blocks, lists, headings. Be concise but thorough.';
   if(k.length){p+='\n\n## The user taught you the following. Use when relevant. Prioritize over default knowledge:\n\n';k.forEach((item,i)=>{p+=`### Taught #${i+1}\n**Topic:** ${item.topic}\n**Answer:** ${item.answer}\n`;if(item.ctx)p+=`**Context:** ${item.ctx}\n`;p+='\n';});p+='IMPORTANT: Use taught answers when relevant. Don\'t contradict them.\n';}
+  
+  if(thinkMode){
+    p+='\n\n## Thinking Mode\nYou MUST think through the problem step-by-step before giving your final answer. Structure your response as:\n\n**THINKING:**\n[Your step-by-step reasoning process here. Analyze the question, consider different approaches, work through the logic, identify potential issues, and arrive at your conclusion]\n\n**ANSWER:**\n[Your final, polished response based on your thinking above]\n\nThe thinking section should show your complete reasoning process. The answer section should be the clean, final response.\n';
+  }
+  
   return p;
 }
 
@@ -406,8 +518,62 @@ function mkBlock(msg,idx){
   const mid='m'+msg.ts+'_'+idx;
   if(isE){b.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span><span class="msg-time">${t}</span></div><div class="err-bub"><i class="fas fa-circle-exclamation"></i>${msg.content}</div>`;}
   else if(isU){b.innerHTML=`<div class="msg-head"><span class="msg-name user-n">You</span><span class="msg-time">${t}</span></div><div class="msg-body">${esc(msg.content)}</div>`;}
-  else{const taught=msg.taught;b.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span>${taught?'<span class="msg-taught"><i class="fas fa-brain"></i> Taught</span>':''}<span class="msg-time">${t}</span></div><div class="msg-body">${renderMD(msg.content)}</div><div class="msg-acts" id="a_${mid}"><button class="m-act t-act ${taught?'on':''}" onclick="togTF('${mid}',${idx})" id="tb_${mid}" ${taught?'style="pointer-events:none"':''}><i class="fas fa-graduation-cap"></i> ${taught?'Taught':'Teach'}</button><button class="m-act" onclick="copyMT(${idx})"><i class="fas fa-copy"></i> Copy</button></div><div id="tf_${mid}" style="display:none"></div>`;}
+  else{
+    let badges = '';
+    if(msg.taught) badges += '<span class="msg-taught"><i class="fas fa-brain"></i> Taught</span>';
+    if(msg.sourced) badges += '<span class="msg-sourced"><i class="fas fa-globe"></i> Sourced</span>';
+    
+    let extraContent = '';
+    
+    // Add thinking section if present
+    if(msg.thinking) {
+      const thinkId = 'think_' + mid;
+      extraContent += `<div class="think-section" id="${thinkId}">
+        <div class="think-hdr" onclick="toggleThinkSection('${thinkId}')">
+          <i class="fas fa-lightbulb"></i> Thinking Process
+          <i class="fas fa-chevron-down chevron"></i>
+        </div>
+        <div class="think-body">${renderMD(msg.thinking)}</div>
+      </div>`;
+    }
+    
+    // Add search results if present
+    if(msg.searchResults && msg.searchResults.length > 0) {
+      const searchId = 'search_' + mid;
+      extraContent += `<div class="search-section" id="${searchId}">
+        <div class="search-hdr" onclick="toggleSearchSection('${searchId}')">
+          <i class="fas fa-globe"></i> Web Search Results (${msg.searchResults.length})
+          <i class="fas fa-chevron-down chevron"></i>
+        </div>
+        <div class="search-body">${msg.searchResults.map(r => `
+          <div class="search-result">
+            <div class="search-result-title">${esc(r.title)}</div>
+            <div class="search-result-url">${esc(r.url)}</div>
+            <div class="search-result-snippet">${esc(r.snippet)}</div>
+          </div>
+        `).join('')}</div>
+      </div>`;
+    }
+    
+    b.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span>${badges}<span class="msg-time">${t}</span></div>${extraContent}<div class="msg-body">${renderMD(msg.content)}</div><div class="msg-acts" id="a_${mid}"><button class="m-act t-act ${msg.taught?'on':''}" onclick="togTF('${mid}',${idx})" id="tb_${mid}" ${msg.taught?'style="pointer-events:none"':''}><i class="fas fa-graduation-cap"></i> ${msg.taught?'Taught':'Teach'}</button><button class="m-act" onclick="copyMT(${idx})"><i class="fas fa-copy"></i> Copy</button></div><div id="tf_${mid}" style="display:none"></div>`;
+  }
   return b;
+}
+
+function toggleThinkSection(id) {
+  const section = document.getElementById(id);
+  const hdr = section.querySelector('.think-hdr');
+  const body = section.querySelector('.think-body');
+  hdr.classList.toggle('collapsed');
+  body.classList.toggle('collapsed');
+}
+
+function toggleSearchSection(id) {
+  const section = document.getElementById(id);
+  const hdr = section.querySelector('.search-hdr');
+  const body = section.querySelector('.search-body');
+  hdr.classList.toggle('collapsed');
+  body.classList.toggle('collapsed');
 }
 
 function togTF(mid,idx){
@@ -465,23 +631,129 @@ async function sendMsg(){
   inner.appendChild(tb);scrollBot();generating=true;updBtn();
 
   try{
+    let searchResults = null;
+    let searchContext = '';
+    
+    // Perform web search if enabled
+    if(searchMode) {
+      toast('Searching the web...', 'info');
+      searchResults = await webSearch(text);
+      
+      if(searchResults && searchResults.length > 0) {
+        searchContext = '\n\n## Web Search Results\nThe user asked for information that may benefit from web search. Here are the results:\n\n';
+        searchResults.forEach((result, i) => {
+          searchContext += `### Result ${i + 1}\n**Title:** ${result.title}\n**URL:** ${result.url}\n**Snippet:** ${result.snippet}\n\n`;
+        });
+        searchContext += 'Use these search results to provide accurate, up-to-date information. If the search results don\'t fully answer the question, use your general knowledge but note that the information might not be current.\n';
+      }
+    }
+    
     const model=document.getElementById('modelSel').value;
-    const apiM=[{role:'system',content:buildSys()},...c.msgs.filter(m=>m.role!=='error').map(m=>({role:m.role,content:m.content}))];
+    let systemPrompt = buildSys();
+    
+    // Add search context to system prompt if available
+    if(searchContext) {
+      systemPrompt += searchContext;
+    }
+    
+    const apiM=[{role:'system',content:systemPrompt},...c.msgs.filter(m=>m.role!=='error').map(m=>({role:m.role,content:m.content}))];
     abortC=new AbortController();
     const res=await fetch(API,{method:'POST',headers:{'Authorization':`Bearer ${KEY}`,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'MMJ Assistant'},body:JSON.stringify({model,messages:apiM,stream:true,max_tokens:4096}),signal:abortC.signal});
     if(!res.ok){let em=`API error (${res.status})`;try{const e=await res.json();em=e.error?.message||em;if(res.status===401||em.toLowerCase().includes('user not found')||em.toLowerCase().includes('invalid'))em='Invalid API key. Admin needs to update it.';else if(res.status===402||em.toLowerCase().includes('credit'))em='No credits on the API account.';else if(res.status===429)em='Rate limited. Wait and retry.';else if(res.status>=500)em='Server error. Try shortly.';}catch(e){}throw new Error(em);}
 
     tb.remove();
-    const am={role:'assistant',content:'',ts:Date.now(),taught:false};c.msgs.push(am);
+    const am={role:'assistant',content:'',ts:Date.now(),taught:false,thinking:'',sourced:searchMode,searchResults:searchResults};c.msgs.push(am);
     const mi=c.msgs.length-1,mid='m'+am.ts+'_'+mi;
     const ab=document.createElement('div');ab.className='msg-block';
-    ab.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span><span class="msg-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span></div><div class="msg-body" id="sBody"></div><div class="msg-acts" style="opacity:0" id="sActs"><button class="m-act t-act" onclick="togTF('${mid}',${mi})" id="tb_${mid}"><i class="fas fa-graduation-cap"></i> Teach</button><button class="m-act" onclick="copyStreamed()"><i class="fas fa-copy"></i> Copy</button></div><div id="tf_${mid}" style="display:none"></div>`;
+    
+    // Build extra content HTML
+    let extraContentHtml = '';
+    
+    // Add search results if present
+    if(searchResults && searchResults.length > 0) {
+      const searchId = 'search_' + mid;
+      extraContentHtml += `<div class="search-section" id="${searchId}">
+        <div class="search-hdr" onclick="toggleSearchSection('${searchId}')">
+          <i class="fas fa-globe"></i> Web Search Results (${searchResults.length})
+          <i class="fas fa-chevron-down chevron"></i>
+        </div>
+        <div class="search-body">${searchResults.map(r => `
+          <div class="search-result">
+            <div class="search-result-title">${esc(r.title)}</div>
+            <div class="search-result-url">${esc(r.url)}</div>
+            <div class="search-result-snippet">${esc(r.snippet)}</div>
+          </div>
+        `).join('')}</div>
+      </div>`;
+    }
+    
+    ab.innerHTML=`<div class="msg-head"><span class="msg-name ai-n">MMJ Assistant</span>${searchMode?'<span class="msg-sourced"><i class="fas fa-globe"></i> Sourced</span>':''}<span class="msg-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span></div>${extraContentHtml}<div class="msg-body" id="sBody"></div><div class="msg-acts" style="opacity:0" id="sActs"><button class="m-act t-act" onclick="togTF('${mid}',${mi})" id="tb_${mid}"><i class="fas fa-graduation-cap"></i> Teach</button><button class="m-act" onclick="copyStreamed()"><i class="fas fa-copy"></i> Copy</button></div><div id="tf_${mid}" style="display:none"></div>`;
     inner.appendChild(ab);
 
     const sb=document.getElementById('sBody');let ft='';
+    let thinkingText = '';
+    let isThinking = false;
+    let isAnswer = false;
+    
     const rd=res.body.getReader(),dc=new TextDecoder();let buf='';
-    while(true){const{done,value}=await rd.read();if(done)break;buf+=dc.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop()||'';for(const l of lines){const tr=l.trim();if(!tr||!tr.startsWith('data:'))continue;const d=tr.slice(5).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);const delta=p.choices?.[0]?.delta?.content;if(delta){ft+=delta;am.content=ft;sb.innerHTML=renderMD(ft);scrollBot();}}catch(e){}}}
-    sb.removeAttribute('id');sb.innerHTML=renderMD(ft);
+    while(true){const{done,value}=await rd.read();if(done)break;buf+=dc.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop()||'';for(const l of lines){const tr=l.trim();if(!tr||!tr.startsWith('data:'))continue;const d=tr.slice(5).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);const delta=p.choices?.[0]?.delta?.content;if(delta){
+  // Check if we're in thinking mode and need to parse THINKING/ANSWER sections
+  if(thinkMode) {
+    // Track state
+    if(ft.includes('**THINKING:**') && !ft.includes('**ANSWER:**')) {
+      isThinking = true;
+      isAnswer = false;
+    } else if(ft.includes('**ANSWER:**')) {
+      isThinking = false;
+      isAnswer = true;
+    }
+    
+    ft += delta;
+    
+    // Extract thinking content
+    if(isThinking || (ft.includes('**THINKING:**') && !ft.includes('**ANSWER:**'))) {
+      const thinkMatch = ft.match(/\*\*THINKING:\*\*\s*([\s\S]*?)(?=\*\*ANSWER:\*\*|$)/);
+      if(thinkMatch) {
+        thinkingText = thinkMatch[1].trim();
+      }
+    }
+    
+    // Extract answer content for display
+    if(isAnswer || ft.includes('**ANSWER:**')) {
+      const answerMatch = ft.match(/\*\*ANSWER:\*\*\s*([\s\S]*?)$/);
+      if(answerMatch) {
+        sb.innerHTML = renderMD(answerMatch[1]);
+      } else {
+        sb.innerHTML = renderMD(ft);
+      }
+    } else {
+      // Still in thinking phase, show a placeholder
+      sb.innerHTML = '<div style="color:var(--think);font-size:12px"><i class="fas fa-lightbulb"></i> Thinking...</div>';
+    }
+  } else {
+    ft+=delta;
+    am.content=ft;
+    sb.innerHTML=renderMD(ft);
+  }
+  scrollBot();}}catch(e){}}}
+    
+    // Final processing
+    if(thinkMode && thinkingText) {
+      am.thinking = thinkingText;
+      // Extract just the answer part for the main content
+      const answerMatch = ft.match(/\*\*ANSWER:\*\*\s*([\s\S]*?)$/);
+      if(answerMatch) {
+        am.content = answerMatch[1].trim();
+      }
+      
+      // Re-render the message block with thinking section
+      const newBlock = mkBlock(am, mi);
+      ab.replaceWith(newBlock);
+    } else {
+      sb.removeAttribute('id');
+      sb.innerHTML=renderMD(ft);
+    }
+    
     const sa=document.getElementById('sActs');if(sa)sa.style.opacity='';saveC();
   }catch(err){
     const te=document.getElementById('typB');if(te)te.remove();
